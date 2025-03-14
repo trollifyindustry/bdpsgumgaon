@@ -82,7 +82,7 @@
             });
             
             try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycby1uz8HwoTjseWErgZEgV422WwRCqv4oqWrBXoLjfwhpF8z3UYoIowhoUTQ19y2OrMk/exec');
+                const response = await fetch('https://script.google.com/macros/s/AKfycbzo-be_NY-kc8rgQZVXGviOFuW9ojBX6DtKC4H4TAVZ4Gfd0NYFfRDelS2eIW5eV33CmQ/exec');
                 const data = await response.json();
                 
                 const tableBody = document.getElementById("data-table");
@@ -125,7 +125,7 @@
 <!-----------------
 // Google Apps Script Code (Google Sheet me jaake Apps Script me daalein)
 function doGet() {
-  var sheet = SpreadsheetApp.openById("10L4euJ1jHK2Um_bENZLcWjuyljHqwnsHuBqEV5c8HM8").getSheetByName("imgHost");
+  var sheet = SpreadsheetApp.openById("104O7iZiYnIsZUyTroHkO1q7tfsVfgKA8_2GmFVjVf0U").getSheetByName("imgHost");
   var data = sheet.getDataRange().getValues();
   var jsonData = [];
   
@@ -133,7 +133,7 @@ function doGet() {
     jsonData.push({
       name: data[i][0], // A column
       father: data[i][1], // B column
-      url: data[i][2], // C column
+      url: data[i][8], // C column
       photo: data[i][3] // D column
     });
   }
