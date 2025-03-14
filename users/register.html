@@ -201,3 +201,27 @@
 </body>
 
 </html>
+
+
+<!-------
+function doGet(e) {
+  const sheet = SpreadsheetApp.openById('1tQMzbWCa3epHUCVxKcEuhZSnkv8o0TMMGCEowHQMM0A').getSheetByName('Sheet3');
+  const rows = sheet.getDataRange().getValues();
+  const data = rows.slice(1).map(row => ({
+    uniqueId: row[0],
+    fullName: row[1],
+    post: row[2],
+    phone: row[11],
+    profilePhotoUrl: row[9]
+  }));
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  const sheet = SpreadsheetApp.openById('1tQMzbWCa3epHUCVxKcEuhZSnkv8o0TMMGCEowHQMM0A').getSheetByName('Sheet3');
+  const params = e.parameter;
+
+  sheet.appendRow([params.uniqueId, params.fullName, params.post, '', '', '', '', '', '', params.profilePhotoUrl, '', params.phone]);
+  return ContentService.createTextOutput('Success');
+}
+----->
