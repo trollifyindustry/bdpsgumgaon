@@ -5,25 +5,30 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Sign Up | Trollify Industry- Material Design</title>
-    <!-- Favicon-->
-    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+<!-- Favicon-->
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  
+  <!-- Google Fonts -->
+  
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+  
+  <!-- Bootstrap Core Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+  
+  <!-- Waves Effect Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.css" rel="stylesheet" />
+  
+  <!-- Animation Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/animate-css/animate.css" rel="stylesheet"/>
+  
+  <!-- Custom Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/css/style.css" rel="stylesheet">
+  
+  <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+  <link href="https://trollifyindustry.github.io/premjanghela/css/themes/all-themes.css" rel="stylesheet" />
+  </head>
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-
-    <!-- Bootstrap Core Css -->
-    <link href="../../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
-
-    <!-- Waves Effect Css -->
-    <link href="../../plugins/node-waves/waves.css" rel="stylesheet" />
-
-    <!-- Animation Css -->
-    <link href="../../plugins/animate-css/animate.css" rel="stylesheet" />
-
-    <!-- Custom Css -->
-    <link href="../../css/style.css" rel="stylesheet">
-</head>
 
 <body class="signup-page">
     <div class="signup-box">
@@ -78,7 +83,7 @@
                             <i class="material-icons">link</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" id="profilePhotoUrl" class="form-control" placeholder="Profile Photo URL" required>
+                            <input type="text" id="profilePhotoUrl" class="form-control" placeholder="Profile Photo URL" value="https://lh3.googleusercontent.com/d/1i7KEmR0YuAQ6ZRuccwG3N4-vdFt86UIP=s0" required>
                         </div>
                     </div>
                     
@@ -111,7 +116,7 @@
 
     <!-- Custom Js -->
 <script>
-  const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbxjytgjnhmgsfbejZKLPI6zubWEffm3OqNpmZNanTSKXj7UoxDL4bhp6eJiJ_AAH5GZ5A/exec';
+  const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbwvwZ7Dv9x98yOQQvFBaMn4PJLtwXGOJmFFBk_We3UkAbgNlf7WABKvy8T_lsH7eeL2/exec';
 
   async function checkAndSubmit() {
     const uniqueId = document.getElementById('uniqueId').value.trim();
@@ -185,7 +190,7 @@
 
         Swal.close(); // Close the loading spinner
         Swal.fire('Success', `Congratulations ${fullName}, your account has been created successfully!`, 'success').then(() => {
-          window.location.href = 'https://www.example.com'; // Redirect to the new page after success
+          window.location.href = 'https://trollifyindustry.github.io/bdpsgumgaon/users/login.html'; // Redirect to the new page after success
         });
       }
     } catch (error) {
