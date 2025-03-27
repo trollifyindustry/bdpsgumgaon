@@ -9,7 +9,7 @@
 </head>
 
 <div class="inone" >
-    <h2>Marksheet Print System</h2>
+    <h2>1st to 5th Marksheet Print System</h2>
     <button onclick="fetchData()" class="inone" >Load Marksheet</button>
     <button onclick="printData()" class="inone" >Print</button>
   </div>
@@ -56,14 +56,40 @@
                         invoice.innerHTML = `
                   <body> 
                    <div class="r" >  
-                   <img class="img"  src="https://lh3.googleusercontent.com/d/1nqJmY1_xZPgjSgbpSl2QSPNEkw_wOkfQ=s0">  
-                   <img class="photo" src="${row[12]}">    <br> <br><br><br><br><h2>ACADEMIC SESSION 2024-25</h2> 
-                   <h1>REPORT CARD</h1>
-                   
-                   
+                   <img class="img"  src="https://lh3.googleusercontent.com/d/1B8jtmnsEqiBbtiz_YWE1iJUi54P_twKZ=s0">  
+                   <img class="photo" src="${row[12]}">    <br> <br><br><br><br><h2ACADEMIC SESSION 2024-25></h2> 
+                   <h1REPORT CARD></h1>
+
                   <br><br> <br><br><br><br><br><br>
+    <table class="nametable">
+                   <tr>
+                       <th class="name" width="180px">STUDENT NAME</th>
+                       <td class="name" width="400px"> : ${row[0]}</td>
+                       <th class="name" width="175px">ROLL NUMBER</th>
+                       <td class="name"> : ${row[1]}</td>
+                   </tr>
+                   <tr>
+                       <th class="name">FATHER NAME</th>
+                       <td class="name"> : ${row[2]}</td>
+                       <th class="name">CLASS</th>
+                       <td class="name"> : ${row[6]}</td>
+                   </tr>
+                   <tr>
+                       <th class="name">MOTHER NAME</th>
+                       <td class="name"> : ${row[3]}</td>
+                       <th class="name">SCHOLAR NO.</th>
+                       <td class="name"> : ${row[9]}</td>
+                   </tr>
+                   <tr>
+                       <th class="name">DATE OF BIRTH</th>
+                       <td class="name"> : ${row[4]}</td>
+                       <th class="name">GANDER</th>
+                       <td class="name"> : ${row[8]}</td>
+                   </tr>
+                </table>
                    
-                   <table class="ns" >   
+                   
+                   <table class="inone" >   
                    <tr>  
                    <td class="name" ><b>STUDENT NAME</b><i class="nam">..</i>:<i class="nam">..</i>${row[0]}</td><td class="name" ><b>ROLL NUMBER</b> <i class="nam">.....</i>:<i class="nam">..</i>${row[1]}</td><td class="name" ></td><td class="name" ></td></td><td class="name" ></td><td class="nam" >.</td><td class="nam"  >..............</td>    
                    </tr>  
@@ -76,9 +102,19 @@
                    <tr>   
                    <td class="name" ><b>DATE OF BIRTH</b><i class="nam">..</i>:<i class="nam">..</i> ${row[4]}</td> <td class="name" ><b>GANDER</b> <i class="nam">................</i>:<i class="nam">..</i>${row[8]} </td><td class="name" ></td>   
                    </tr>  
-                   </table>  <br><br><br><br><br><br><br><br><br>
+                   </table> 
                    
-                   <h3 class="aoaa" >ASSESSMENT OF ACADEMIC AREAS</h3> 
+                   
+                   
+              
+                   
+                   
+                   
+                   
+                   
+                   <br><br><br><br><br><br><br><br><br><br>
+                   
+                   <h3 class="aoaa" >ASSESSMENT OF ACADEMIC AREAS</h3> <br>
                    <table class="mtt"> 
                    <tr>  
                    <th rowspan="3">S.N.</th>  
@@ -116,7 +152,7 @@
                    <td>${row[56]}</td> <td>${row[57]}</td> <td>${row[58]}</td>  
                    <td>${row[74]}</td> <td>${row[75]}</td>  
                    <td>${row[86]}</td> <td>${row[87]}</td> <td>${row[88]}</td>  
-                   <td>${row[104]}</td> <td>${row[105]}</td>  
+                   <td>${formatNumber(row[104])}</td> <td>${row[105]}</td>  
                    </tr>  
                    <tr>  
                    <td>2</td>  
@@ -217,6 +253,14 @@
     
 </table>
 
+                   
+              
+                   
+                   
+                   
+               
+
+
 <p class="sot">Signature of Teacher</p>
 <p class="sot2">Signature of Principal</p>
 <p class="dakhilno"><b></b> <b style="color:red;"></b></p>
@@ -256,6 +300,24 @@
 
 <style>
 
+ 
+  
+.name{  
+ background-color:transparent;  
+ text-align:left;  
+ padding:2px;  
+
+   } 
+.nametable{  
+  position:absolute;
+  width:80%;  
+  margin-left:110px;
+  margin-top:;
+  font-size:;
+  border:none;
+  text-align:left;
+   } 
+  
   .vm {
     text-align: right;
     font-variant-numeric: tabular-nums;
@@ -338,7 +400,7 @@ th, td {
       
 }  
 th {  
-    background-color: #d7f0ff;  
+    background-color: transparent;  
 }  
    .img {  
    position:absolute;  
@@ -378,7 +440,8 @@ th {
   border:1px solid black;  
   border-radius:3px;  
   margin-top:300px;  
-  margin-left:1420px;  
+  margin-left:1420px;
+  
    }  
    .bgimg{  
   width:47%;  
@@ -387,7 +450,7 @@ th {
   margin-left:450px;  
   margin-bottom:200px;  
   margin-top:-90px; 
-  
+  display:none;
 
    }  
    h2{  
@@ -407,12 +470,7 @@ position:absolute;
  margin-top:185px;  
  font-size:25px; 
    }  
-   .ns{  
-  width:40%;  
-  margin-left:110px;
-  font-size:24px;
-
-   }  
+    
    .aoaa{  
   position:absolute;  
   margin-left:590px;  
@@ -429,7 +487,7 @@ position:absolute;
    }  
   .st{  
   width:50%;  
-    margin-top:100px;
+    margin-top:105px;
   font-size:17px;  
     position: absolute;
     margin-left:755px; 
@@ -493,9 +551,8 @@ th, td {
     padding: 5px 3px;  
       
 }  
-th {  
-    background-color: #d7f0ff;  
-}  
+
+  
    .img {  
    position:absolute;  
    display: block;  
@@ -520,13 +577,7 @@ th {
   border:none;  
   padding:2px;  
    }  
-   .name{  
- border:none;  
- background-color:transparent;  
- text-align:left;  
- padding:2px;  
-
-   }  
+    
    
    
     
@@ -600,9 +651,7 @@ th, td {
     padding: 5px 3px;  
       
 }  
-th {  
-    background-color: #d7f0ff;  
-}  
+  
    .img {  
    position:absolute;  
    display: block;  
@@ -643,16 +692,8 @@ th {
   margin-top:300px;  
   margin-left:1420px;  
    }  
-   .bgimg{  
-  width:47%;  
-  opacity:15%;  
-  position:absolute;  
-  margin-left:450px;  
-  margin-bottom:200px;  
-  margin-top:-90px; 
   
-
-   }  
+   
    h2{  
 position:absolute;  
   margin-left:595px;  
@@ -661,12 +702,7 @@ position:absolute;
      font-size:35px;
    }  
    
-   .ns{  
-  width:80%;  
-  margin-left:110px;
-  font-size:24px;
-
-   }  
+   
    .aoaa{  
   position:absolute;  
   margin-left:590px;  
@@ -740,9 +776,7 @@ th, td {
     padding: 5px 3px;  
       
 }  
-th {  
-    background-color: #d7f0ff;  
-}  
+  
    .img {  
    position:absolute;  
    display: block;  
@@ -847,9 +881,7 @@ th, td {
     padding: 5px 3px;  
       
 }  
-th {  
-    background-color: #d7f0ff;  
-}  
+  
    .img {  
    position:absolute;  
    display: block;  
@@ -890,16 +922,10 @@ th {
   margin-top:300px;  
   margin-left:1420px;  
    }  
-   .bgimg{  
-  width:47%;  
-  opacity:15%;  
-  position:absolute;  
-  margin-left:450px;  
-  margin-bottom:200px;  
-  margin-top:-90px; 
+   
   
 
-   }  
+   
    h2{  
 position:absolute;  
   margin-left:595px;  
@@ -982,9 +1008,7 @@ th, td {
     padding: 5px 3px;  
       
 }  
-th {  
-    background-color: #d7f0ff;  
-}  
+  
    .img {  
    position:absolute;  
    display: block;  
@@ -1023,5 +1047,4 @@ th {
    
 }
 
- 
 </style>
