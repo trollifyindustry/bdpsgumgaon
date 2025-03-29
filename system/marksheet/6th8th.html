@@ -56,7 +56,7 @@
                         invoice.innerHTML = `
                   <body> 
                    <div class="r" >  
-                   <img class="img"  src="https://lh3.googleusercontent.com/d/1B8jtmnsEqiBbtiz_YWE1iJUi54P_twKZ=s0">  
+                   <img class="img"  src="https://lh3.googleusercontent.com/d/15_X_r-M2ZuqQGX-zbxW_wM1sgxbxWK4J=s0">  
                     <br> <br><br><br><br><h2ACADEMIC SESSION 2024-25></h2> 
                    <h1REPORT CARD></h1>
 
@@ -64,7 +64,7 @@
     <table class="nametable">
                    <tr>
                        <th class="name" width="200px">STUDENT'S NAME</th>
-                       <td class="name" width="400px"> : ${row[0]}</td>
+                       <td class="name" width="640px"> : ${row[0]}</td>
                        <th class="name" width="175px">ROLL NUMBER</th>
                        <td class="name"> : ${row[1]}</td>
                    </tr>
@@ -100,15 +100,15 @@
                    <tr>  
                    <th rowspan="3">Sr.N.</th>  
                    <th rowspan="3" width="200px">SUBJECT</th>  
-                   <th colspan="2" rowspan="2">MONTHLY <br> EVALUATION <br> <i class="font-size1">(10 MARKS)</i></th>  
+                   <th colspan="2" rowspan="2">MONTHLY <br> EVALUATION <br> (10 MARKS)</th>  
                    <th colspan="2" rowspan="2">HALF YEARLY <br> EVALUATION <br> (20 MARKS)</th>  
-                   <th colspan="4">ANNUAL EVALUATION <i class="font-size1">(70 MARKS)</i></th>       
+                   <th colspan="4">ANNUAL EVALUATION (70 MARKS)</th>       
                    <th rowspan="3">TOTAL MARKS (100)</th>  
                    <th rowspan="3">OVERALL GRADE</th> <td class="nam" >...</td>  
                    </tr>  
                    <tr>  
-                   <th colspan="2">WRITTEN  <br> <i class="font-size1">(60 MARKS)</i></th>  
-                   <th colspan="2">CO-CURRICULAR <br> ACTIVITIES <i class="font-size1">(10 MARKS)</i></th>    
+                   <th colspan="2">WRITTEN  <br> (60 MARKS)</th>  
+                   <th colspan="2">CO-CURRICULAR <br> ACTIVITIES (10 MARKS)</th>    
                    </tr>  
                    <tr>  
                    <th>MARKS OBTAINED</th>  
@@ -214,23 +214,23 @@
                    
                    <table class="st">
     <tr>
-        <td  width="280px"><b>TOTAL WORKING DAYS: </b>${row[18]}</td>
+        <td  width=""><b>TOTAL WORKING DAYS: </b>${row[18]}</td>
         
         <td width=""><b>PROMOTED TO CLASS: </b>${row[17]}</td>
         
-        <td  width="210px"><b>TOTAL SCORE: </b>${formatNumber(row[13])}</td>
-        <th rowspan="2">RESULT: ${row[16]}</th>
+        <td  width=""><b>TOTAL SCORE: </b>${formatNumber(row[13])}</td>
+        <th rowspan="2" style="text-align:center;">RESULT : ${row[16]}</th>
     </tr>
     <tr>
         <td><b>TOTAL ATTENDANCE: </b>${row[19]}</td>
         
         
-        <td  width="350px"><b>ATTENDANCE PERCENTAGE: </b>${formatNumber(row[14])}% </td>
+        <td  width=""><b>ATTENDANCE PERCENTAGE: </b>${formatNumber(row[14])}% </td>
         
         <td><b>GRADE : </b>${row[15]}</td>
     </tr>
     <tr>
-      <td colspan="4"><b>Class Teacher’s Remarks:</b> Very Good</td>
+      <td colspan="4"><b>Class Teacher’s Remarks:</b> Very Good keep it up.</td>
      </tr>
     
     
@@ -241,15 +241,26 @@
                    
                    
                    
-               
-
-
-<p class="sot">Signature of Teacher</p>
-<p class="sot2">Signature of Principal</p>
-<p class="dakhilno"><b></b> <b style="color:red;"></b></p>
+              
 <p class="issueDate">Issue Date :${row[10]}</p>
 <img class="qr" src="${row[20]}">
- <img class="studentphoto" src="${row[12]}">  
+ <img class="studentphoto" src="${row[12]}">
+ <p class="prem-janghela"> Prepared through <b>TROLLIFY INDUSTRY,</b> designed for BDPS by <b>Prem Janghela</b>,9752776923 <p>
+ 
+ <table class="singnatureTable">
+    <tr>
+        <td class="singnatureTd"><b>Place:</b> Gumgaon</td>
+        <td class="singnatureTd">${row[10]}</td>
+        <td class="singnatureTd">${row[11]}</td>
+        <td class="singnatureTd">Mrs. Vandana Sulakhiya</td>
+    </tr>
+    <tr>
+        <td class="singnatureTd"><b>Date:</b> 29/03/2025</td>
+        <td class="singnatureTd"><b>CLASS TEACHER</b></td>
+        <td class="singnatureTd"><b>ACADEMIC INCHARGE</b></td>
+        <td class="singnatureTd"><b>PRINCIPAL</b></td>
+    </tr>
+ </table>
 
                         
                       </body> 
@@ -284,6 +295,25 @@
 
 
 <style>
+.singnatureTd{
+  border:none;
+  text-align: center;
+  padding:1px;
+  font-size:18px;
+}
+.singnatureTable{
+  width:76%;
+  position:absolute;
+  margin-top:271px;  
+  margin-left:300px;
+}
+.prem-janghela{
+  position:absolute;
+  margin-top:354px;  
+  margin-left:50px;
+  font-size:13px;
+  
+}
  .studentphoto{  
   width:140px;  
   height:180px;  
@@ -295,7 +325,7 @@
   
    }  
  
-.font-size1{
+.font-size{
   font-size:18px;
 } 
 .font-size2{
@@ -473,7 +503,7 @@ position:absolute;
     
    
    .lt{  
-  width:23%;  
+  width:15%;  
   font-size:14px;
   margin-top:230px;
   margin-left:65px;
@@ -482,11 +512,11 @@ position:absolute;
    }  
 
   .st{  
-    width:66.7%;  
+    width:76%;  
     margin-top:140px;
     font-size:17px;  
     position: absolute;
-    margin-left:441px; 
+    margin-left:300px; 
     text-align:left;
    }   
   
