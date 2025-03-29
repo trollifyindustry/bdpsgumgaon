@@ -9,7 +9,7 @@
 </head>
 
 <div class="inone" >
-    <h2>6th to 8th Marksheet Print System</h2>
+    <h2>1ST 4TH Marksheet Print System</h2>
     <button onclick="fetchData()" class="inone" >Load Marksheet</button>
     <button onclick="printData()" class="inone" >Print</button>
   </div>
@@ -29,7 +29,7 @@
                 }
             });
 
-  fetch("https://script.google.com/macros/s/AKfycbxHJWzEOB9BDmPDzyhxHOgiMAId1-16MREGbMfmepNYbJZDISI4jwWd7YRIjQUOzEqp/exec")
+            fetch("https://script.google.com/macros/s/AKfycbxHJWzEOB9BDmPDzyhxHOgiMAId1-16MREGbMfmepNYbJZDISI4jwWd7YRIjQUOzEqp/exec")
                 .then(response => response.json())
                 .then(data => {
                     Swal.close(); // Hide spinner once data is loaded
@@ -108,7 +108,7 @@
                    </tr>  
                    <tr>  
                    <th colspan="2">WRITTEN  <br> (60 MARKS)</th>  
-                   <th colspan="2">CO-CURRICULAR <br> ACTIVITIES<br>(10 MARKS)</th>    
+                   <th colspan="2">CO-CURRICULAR <br> ACTIVITIES <br>(10 MARKS)</th>    
                    </tr>  
                    <tr>  
                    <th>MARKS OBTAINED</th>  
@@ -149,7 +149,7 @@
                    </tr>  
                    <tr>  
                    <td>4</td>  
-                   <td>ORAL</td>  
+                   <td>EVS</td>  
                     <td>${row[48]}</td> <td>${row[49]}</td>  
                    <td>${row[66]}</td> <td>${row[67]}</td>  
                    <td>${row[80]}</td> <td>${row[81]}</td>  
