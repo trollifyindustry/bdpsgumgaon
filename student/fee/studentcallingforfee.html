@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>📱 Student Calling System</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  body { background: #f5f7fb; font-family: 'Segoe UI', sans-serif; padding: 20px; }
+  .card { box-shadow: 0 6px 18px rgba(40,44,63,0.08); border-radius: 12px; border: none; }
+  .phone-btn { min-width: 120px; }
+  .cardsContainer { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+  .small-muted { font-size: 0.85rem; color: #000; }
+  .spinner-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+  strong{ font-weight:bold; color:#000;}
+</style>
+</head>
+<body>
+<div class="spinner-overlay" id="spinner">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div class="container">
+  <h3 class="mb-3 text-center"> 📱 Student Calling System 2025-26</h3>
+  <div class="mb-4">
+    <input id="searchInput" type="search" class="form-control form-control-lg" placeholder="Search....">
+  </div>
+  <div id="cards" class="cardsContainer"></div>
+</div>
+
+<script>
+const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyGd5-QO52fGTS9n7tpmHgznp-ukeHKu8NniNZKlDnYcZlsQ5s_7hH4vchG4BbJtO2P/exec"; // <-- apna WebApp URL yahan dalen
+let studentsCache = [];
+
+function displayDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return !isNaN(d) ? `${d.getFullYear()}-${("0"+(d.getMonth()+1)).slice(-2)}-${("0"+d.getDate()).slice(-2)}` : iso;
+}
+
+async function fetchStudents() {
+  try {
+    const res = await fetch(WEBAPP_URL);
+    const json = await res.json();
+    if (json.status === "success") return json.data;
+    throw new Error(json.message || "Failed to load");
+  } catch (err) {
+    Swal.fire("Error", err.message, "error");
+    return [];
+  }
+}
+
+function showSpinner(show=true) {
+  document.getElementById("spinner").style.display = show ? "flex" : "none";
+}
+
+function renderCards(students) {
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+  if (!students.length) {
+    container.innerHTML = `<div class='text-center text-muted'>No students found.</div>`;
+    return;
+  }
+  students.forEach(s => {
+    const card = document.createElement("div");
+    card.className = "card p-3";
+
+    card.innerHTML = `
+      <h5>${s.Name || '-'}</h5>
+      <div class="small-muted mb-2"><Strong>Father: </Strong> ${s.Father || '-'}</div>
+      <div class="mb-2 small-muted"><strong>Class:</strong> ${s.Class || '-'} | <strong>ScholarNo:</strong> ${s.ScholarNo || '-'}</div>
+      <div class="small-muted mb-2"><strong>Address:</strong> ${s.Address || '-'}</div>
+      <div class="small-muted mb-2"><strong>Last Call:</strong> ${displayDate(s.LastCallDate) || '-'}</div>
+      <div class="small-muted mb-3"><strong>Remarks:</strong> ${s.Remarks || '-'}</div>
+      <div class="d-flex gap-2 mb-3">
+        <a class="btn btn-sm btn-outline-primary phone-btn" href="${s.Phone1 ? `tel:${s.Phone1}` : '#'}">📱 ${s.Phone1 || '-'}</a>
+        <a class="btn btn-sm btn-outline-secondary phone-btn" href="${s.Phone2 ? `tel:${s.Phone2}` : '#'}">📱 ${s.Phone2 || '-'}</a>
+      </div>
+      <label class="small-muted">Last Call Date</label>
+      <input type="date" class="form-control mb-2 lastCallDate" value="${s.LastCallDate ? displayDate(s.LastCallDate) : ''}">
+      <label class="small-muted">Remarks</label>
+      <input type="text" class="form-control mb-2 remarks" value="${s.Remarks || ''}">
+      <button class="btn btn-success btn-sm w-100 mb-3 updateBtn">Update</button>
+      <hr>
+      <div class="small-muted"><strong>Total Fee:</strong> ₹${s.TotalFee || 0}</div>
+      <div class="small-muted"><strong>Total Paid:</strong> ₹${s.PaidFee || 0}</div>
+      <label class="small-muted mt-2">Add Paid Fee</label>
+      <input type="number" class="form-control mb-2 paidFee" value="">
+      <div class="small-muted mb-2"><strong>Pending Fee:</strong> ₹${s.PendingFee || 0}</div>
+      <label class="small-muted">Fee Status</label>
+      <select class="form-control mb-2 feeStatus">
+        <option ${s.FeeStatus==="Paid"?"selected":""}>Paid</option>
+        <option ${s.FeeStatus==="Partial"?"selected":""}>Partial</option>
+        <option ${s.FeeStatus==="Unpaid"?"selected":""}>Unpaid</option>
+      </select>
+      <button class="btn btn-warning btn-sm w-100 paidBtn">Paid Update</button>
+    <b>________________________________________</b>
+    `;
+
+    // Update button
+    card.querySelector(".updateBtn").addEventListener("click", async () => {
+      showSpinner(true);
+      const payload = {
+        type: "normalUpdate",
+        scholarNo: s.ScholarNo,
+        lastCallDate: card.querySelector(".lastCallDate").value,
+        remarks: card.querySelector(".remarks").value
+      };
+      const res = await fetch(WEBAPP_URL, { method: "POST", body: JSON.stringify(payload) });
+      const j = await res.json();
+      showSpinner(false);
+      if (j.status === "success") Swal.fire("Updated", "Record updated", "success");
+      else Swal.fire("Error", j.message, "error");
+    });
+
+    // Paid update button
+    card.querySelector(".paidBtn").addEventListener("click", async () => {
+      const paidFee = Number(card.querySelector(".paidFee").value) || 0;
+      if (!paidFee) return Swal.fire("Error", "Please enter paid amount", "error");
+
+      const confirmRes = await Swal.fire({
+        title: "Are you sure?",
+        text: `Add ₹${paidFee} to Paid Fee?`,
+        icon: "question",
+        showCancelButton: true
+      });
+      if (!confirmRes.isConfirmed) return;
+
+      const { value: pwd } = await Swal.fire({
+        title: "Enter Password",
+        input: "password",
+        inputPlaceholder: "Enter password",
+        showCancelButton: true
+      });
+      if (!pwd) return;
+
+      showSpinner(true);
+      const payload = {
+        type: "feeUpdate",
+        scholarNo: s.ScholarNo,
+        paidFee,
+        feeStatus: card.querySelector(".feeStatus").value,
+        password: pwd
+      };
+      const res = await fetch(WEBAPP_URL, { method: "POST", body: JSON.stringify(payload) });
+      const j = await res.json();
+      showSpinner(false);
+      if (j.status === "success") Swal.fire("Updated", "Fee updated", "success");
+      else Swal.fire("Error", j.message, "error");
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function applySearchFilter() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  const filtered = studentsCache.filter(s =>
+    (s.Name || '').toLowerCase().includes(q) ||
+    (s.Father || '').toLowerCase().includes(q) ||
+    (String(s.ScholarNo) || '').toLowerCase().includes(q) ||
+    (s.Class || '').toLowerCase().includes(q) ||
+    (s.Address || '').toLowerCase().includes(q)
+  );
+  renderCards(filtered);
+}
+
+(async function init(){
+  studentsCache = await fetchStudents();
+  renderCards(studentsCache);
+  document.getElementById("searchInput").addEventListener("input", applySearchFilter);
+  showSpinner(false);
+})();
+</script>
+</body>
+</html>
+
+
+<!--
+function doGet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName("Sheet1");
+  const data = sh.getDataRange().getValues();
+  const headers = data.shift();
+  
+  const students = data.map(r => {
+    let obj = {};
+    headers.forEach((h, i) => obj[h] = r[i]);
+    return obj;
+  });
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: "success", data: students }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    const body = JSON.parse(e.postData.contents);
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sh = ss.getSheetByName("Sheet1");
+    const data = sh.getDataRange().getValues();
+    const headers = data.shift();
+    const scholarIndex = headers.indexOf("ScholarNo");
+    
+    const rowIndex = data.findIndex(r => r[scholarIndex] == body.scholarNo);
+    if (rowIndex === -1) {
+      return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Scholar not found" })).setMimeType(ContentService.MimeType.JSON);
+    }
+    const sheetRow = rowIndex + 2; // because header + 1-index
+
+    if (body.type === "normalUpdate") {
+      sh.getRange(sheetRow, headers.indexOf("LastCallDate") + 1).setValue(body.lastCallDate || "");
+      sh.getRange(sheetRow, headers.indexOf("Remarks") + 1).setValue(body.remarks || "");
+    }
+
+    if (body.type === "feeUpdate") {
+      if (body.password !== "1234") {
+        return ContentService.createTextOutput(JSON.stringify({ status: "error", message: "Wrong password" })).setMimeType(ContentService.MimeType.JSON);
+      }
+      const totalFeeCol = headers.indexOf("TotalFee") + 1;
+      const paidFeeCol = headers.indexOf("PaidFee") + 1;
+      const pendingFeeCol = headers.indexOf("PendingFee") + 1;
+      const feeStatusCol = headers.indexOf("FeeStatus") + 1;
+
+      let oldPaid = Number(sh.getRange(sheetRow, paidFeeCol).getValue()) || 0;
+      let newPaid = oldPaid + Number(body.paidFee || 0);
+      let totalFee = Number(sh.getRange(sheetRow, totalFeeCol).getValue()) || 0;
+      let pendingFee = totalFee - newPaid;
+      
+      sh.getRange(sheetRow, paidFeeCol).setValue(newPaid);
+      sh.getRange(sheetRow, pendingFeeCol).setValue(pendingFee);
+      sh.getRange(sheetRow, feeStatusCol).setValue(body.feeStatus || "");
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.message }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+---->
