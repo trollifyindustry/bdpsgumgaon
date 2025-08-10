@@ -29,7 +29,7 @@
     <div class="signup-box">
         <div class="logo">
             <a href="javascript:void(0);">Register<b></b></a>
-            <small>Prem Janghela - Material Design</small>
+            <small>Trollify Industry - Material Design</small>
         </div>
         <div class="card">
             <div class="body">
@@ -78,7 +78,7 @@
                             <i class="material-icons">link</i>
                         </span>
                         <div class="form-line">
-                            <input type="text" id="profilePhotoUrl" class="form-control" placeholder="Profile Photo URL" value="https://i.ibb.co/XxB0VqjB/user-244.png"  required>
+                            <input type="text" id="profilePhotoUrl" class="form-control" placeholder="Profile Photo URL" required>
                         </div>
                     </div>
                     
@@ -185,7 +185,7 @@
 
         Swal.close(); // Close the loading spinner
         Swal.fire('Success', `Congratulations ${fullName}, your account has been created successfully!`, 'success').then(() => {
-          window.location.href = 'https://www.example.com'; // Redirect to the new page after success
+          window.location.href = 'login.html'; // Redirect to the new page after success
         });
       }
     } catch (error) {
