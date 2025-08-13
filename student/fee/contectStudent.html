@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Contacts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
+  header { background: #1976d2; color: white; padding: 1rem; text-align: center; }
+  #searchBox { width: 90%; margin: 1rem auto; display: block; padding: 0.5rem; font-size: 16px; }
+  .card {
+    background: white; border-radius: 8px; padding: 1rem;
+    margin: 1rem auto; width: 90%; box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .card h3 { margin: 0 0 5px; color: #1976d2; }
+  .card p { margin: 3px 0; }
+  .phone-link { color: #0d6efd; text-decoration: none; }
+  .update-btn {
+    background: #28a745; color: white; padding: 6px 12px;
+    border: none; border-radius: 4px; cursor: pointer;
+  }
+  .update-btn:hover { background: #218838; }
+  .field-label { font-weight: bold; }
+  input.editable { padding: 4px; width: 95%; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Student Contacts</h1>
+</header>
+
+<input type="text" id="searchBox" placeholder="Search by Scholar No, Name, Father...">
+
+<div id="cardsContainer"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbz4pFdhM81p0FxdkqHZzB7fQJ3LOIYnWy5VGBnrKu20E5Hdl-CP1zKJsYH8FR_QkWQ/exec"; // yaha apna Apps Script Web App URL paste karo
+
+let records = [];
+
+function showSpinner(msg) {
+  Swal.fire({ title: msg || 'Loading...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+}
+function closeSpinner() { Swal.close(); }
+
+async function loadData() {
+  showSpinner('Loading data...');
+  try {
+    const res = await fetch(`${API_URL}?action=list`);
+    const data = await res.json();
+    if (data.ok) {
+      records = data.records;
+      renderCards(records);
+    } else {
+      Swal.fire('Error', data.error || 'Failed to load data', 'error');
+    }
+  } catch (err) {
+    Swal.fire('Error', err.message, 'error');
+  }
+  closeSpinner();
+}
+
+function renderCards(data) {
+  const container = document.getElementById('cardsContainer');
+  container.innerHTML = '';
+  data.forEach(rec => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <h3>${rec.name}</h3>
+      <p><span class="field-label">Scholar No:</span> ${rec.scholar}</p>
+      <p><span class="field-label">Father:</span> ${rec.father}</p>
+      <p><span class="field-label">Class:</span> ${rec.class}</p>
+      <p><span class="field-label">Address:</span> ${rec.address}</p>
+      <p><span class="field-label">Phone 1:</span> ${rec.phone1 ? `<a class="phone-link" href="tel:${rec.phone1}">${rec.phone1}</a>` : '-'}</p>
+      <p><span class="field-label">Phone 2:</span> ${rec.phone2 ? `<a class="phone-link" href="tel:${rec.phone2}">${rec.phone2}</a>` : '-'}</p>
+      <p><span class="field-label">Last Call Date:</span><br>
+        <input class="editable" type="date" id="date-${rec.row}" value="${rec.lastCallDate || ''}">
+      </p>
+      <p><span class="field-label">Remarks:</span><br>
+        <input class="editable" type="text" id="remarks-${rec.row}" value="${rec.remarks || ''}">
+      </p>
+      <button class="update-btn" onclick="updateRecord(${rec.row})">Update</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+async function updateRecord(row) {
+  const dateVal = document.getElementById(`date-${row}`).value;
+  const remarksVal = document.getElementById(`remarks-${row}`).value;
+
+  showSpinner('Updating...');
+  try {
+    const formData = new FormData();
+    formData.append('action', 'update');
+    formData.append('row', row);
+    formData.append('lastCallDate', dateVal);
+    formData.append('remarks', remarksVal);
+
+    const res = await fetch(API_URL, { method: 'POST', body: formData });
+    const data = await res.json();
+    closeSpinner();
+    if (data.ok) {
+      Swal.fire('Success', 'Record updated successfully', 'success');
+      loadData();
+    } else {
+      Swal.fire('Error', data.error || 'Update failed', 'error');
+    }
+  } catch (err) {
+    closeSpinner();
+    Swal.fire('Error', err.message, 'error');
+  }
+}
+
+document.getElementById('searchBox').addEventListener('input', function() {
+  const term = this.value.toLowerCase();
+  const filtered = records.filter(r =>
+    r.scholar.toLowerCase().includes(term) ||
+    r.name.toLowerCase().includes(term) ||
+    r.father.toLowerCase().includes(term)
+  );
+  renderCards(filtered);
+});
+
+loadData();
+</script>
+
+</body>
+</html>
+
+<!-----
+const SHEET_ID = '19c1P9fYvaoXxMld5qXpK-sTUPLfWhSNFq5hTyDnRVmY';  // Google Sheet ka ID paste karo
+const SHEET_NAME = 'Contect'; // Sheet ka naam exactly jaisa hai
+
+function doGet(e) {
+  const action = e?.parameter?.action || 'list';
+  if (action === 'list') return listData_();
+  return json_({ ok: false, error: 'Unknown GET action' });
+}
+
+function doPost(e) {
+  const p = e?.parameter || {};
+  if (p.action === 'update') {
+    const row = parseInt(p.row, 10);
+    if (!row || row < 2) return json_({ ok: false, error: 'Invalid row number' });
+
+    try {
+      const sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+      if (!sh) return json_({ ok: false, error: 'Sheet not found' });
+
+      sh.getRange(row, 8).setValue(p.lastCallDate || '');
+      sh.getRange(row, 9).setValue(p.remarks || '');
+
+      const values = sh.getRange(row, 1, 1, 9).getValues()[0];
+      return json_({ ok: true, record: normalize_(values, row) });
+    } catch (err) {
+      return json_({ ok: false, error: String(err) });
+    }
+  }
+  return json_({ ok: false, error: 'Unknown POST action' });
+}
+
+function listData_() {
+  try {
+    const sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+    if (!sh) return json_({ ok: false, error: 'Sheet not found' });
+
+    const vals = sh.getDataRange().getValues();
+    const out = [];
+    for (let i = 1; i < vals.length; i++) {
+      out.push(normalize_(vals[i], i + 1));
+    }
+    return json_({ ok: true, records: out });
+  } catch (err) {
+    return json_({ ok: false, error: String(err) });
+  }
+}
+
+function normalize_(row, rNum) {
+  let lastCall = row[7];
+  if (lastCall instanceof Date) {
+    lastCall = Utilities.formatDate(lastCall, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  }
+  return {
+    row: rNum,
+    scholar: String(row[0] || ''),
+    name: String(row[1] || ''),
+    father: String(row[2] || ''),
+    class: String(row[3] || ''),
+    address: String(row[4] || ''),
+    phone1: String(row[5] || ''),
+    phone2: String(row[6] || ''),
+    lastCallDate: lastCall || '',
+    remarks: String(row[8] || '')
+  };
+}
+
+function json_(o) {
+  return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+}
