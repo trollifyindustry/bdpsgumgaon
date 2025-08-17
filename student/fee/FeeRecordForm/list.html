@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student List</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    body { font-family: Arial, sans-serif; background: #111; color: #fff; }
+    .search-box {
+      text-align: center;
+      margin: 20px;
+    }
+    .search-box input {
+      width: 50%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background: #333;
+      color: white;
+    }
+    table { width: 90%; margin: 20px auto; border-collapse: collapse; }
+    th, td {
+      padding: 10px;
+      border: 1px solid #555;
+      text-align: center;
+    }
+    th { background: #222; }
+    tr:nth-child(even) { background: #333; }
+    button {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      background: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background: #218838; }
+  </style>
+</head>
+<body>
+  <h2 style="text-align:center;">Student List</h2>
+
+  <!-- Search Box -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search by Scholar, Name, Father, Class...">
+  </div>
+
+  <!-- Table -->
+  <table id="studentTable">
+    <thead>
+      <tr>
+        <th>Scholar Number</th>
+        <th>Name</th>
+        <th>Father</th>
+        <th>Class</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbw2ZYrsNS2xfUxRK6W1-twnJYabw_n0Wj0AhKe_yIwE5yox_DBsjzmrFKBrOdeKLzvB/exec";
+    const tableBody = document.querySelector("#studentTable tbody");
+    const searchInput = document.getElementById("searchInput");
+
+    // Local storage key
+    const STORAGE_KEY = "studentData";
+
+    // Table render function
+    function renderTable(data, filterText = "") {
+      tableBody.innerHTML = "";
+      const lowerFilter = filterText.toLowerCase();
+
+      data.forEach(student => {
+        if (
+          student.ScholarNumber.toString().toLowerCase().includes(lowerFilter) ||
+          student.Name.toLowerCase().includes(lowerFilter) ||
+          student.Father.toLowerCase().includes(lowerFilter) ||
+          student.Class.toLowerCase().includes(lowerFilter)
+        ) {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${student.ScholarNumber}</td>
+            <td>${student.Name}</td>
+            <td>${student.Father}</td>
+            <td>${student.Class}</td>
+            <td><button onclick="payFee('${student.ScholarNumber}')">Fee Pay</button></td>
+          `;
+          tableBody.appendChild(row);
+        }
+      });
+    }
+
+    // Fee Pay button redirect
+    function payFee(scholarNumber) {
+      window.location.href = "index.html?scholar=" + scholarNumber;
+    }
+    window.payFee = payFee; // ताकि onclick काम करे
+
+    // Load from backend (refresh data)
+    function fetchData(showLoader = true) {
+      if (showLoader) {
+        Swal.fire({
+          title: 'Loading...',
+          html: 'Fetching student data, please wait...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+      }
+
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          // Save in local storage
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          renderTable(data, searchInput.value);
+
+          if (showLoader) Swal.close();
+        })
+        .catch(err => {
+          console.error("Error loading data", err);
+          if (showLoader) Swal.close();
+        });
+    }
+
+    // On page load
+    document.addEventListener("DOMContentLoaded", () => {
+      // अगर localStorage में data है तो direct show करो
+      const cachedData = localStorage.getItem(STORAGE_KEY);
+      if (cachedData) {
+        renderTable(JSON.parse(cachedData));
+      } else {
+        fetchData(true); // पहली बार load के साथ spinner
+      }
+
+      // Background में हर 60 sec बाद data refresh करो (बिना spinner)
+      setInterval(() => fetchData(false), 60000);
+
+      // Search filter
+      searchInput.addEventListener("keyup", () => {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        renderTable(data, searchInput.value);
+      });
+    });
+  </script>
+</body>
+</html>
+
+<!----
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Sheet1"); // Sheet का नाम यहाँ लिखो
+  var data = sheet.getDataRange().getValues(); // पूरा data लाओ
+
+  var result = [];
+
+  // पहली row header है, इसलिए i=1 से शुरू किया
+  for (var i = 1; i < data.length; i++) {
+    result.push({
+      ScholarNumber: data[i][0],
+      Name: data[i][1],
+      Father: data[i][2],
+      Class: data[i][3]
+    });
+  }
+
+  return ContentService.createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
