@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>user login Cards</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --card: #f9f9f9;
+      --text: #222;
+      --muted: #666;
+      --border: #e6e6e6;
+      --shadow: 0 2px 8px rgba(0,0,0,0.06);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 20px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg); color: var(--text);
+    }
+    header {
+      max-width: 920px; margin: 0 auto 16px auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.2px;
+    }
+    .filters {
+      width: 100%; max-width: 920px; margin: 0 auto 16px auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    }
+    .filters input {
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px;
+      font-size: 14px; background: #fff; outline: none; transition: box-shadow .2s, border-color .2s;
+    }
+    .filters input:focus { border-color: #c9c9c9; box-shadow: var(--shadow); }
+    #cards {
+      max-width: 920px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px 16px; box-shadow: var(--shadow); transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+    .name { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: var(--text); }
+    .dt   { font-size: 13px; color: var(--muted); }
+    .empty {
+      max-width: 920px; margin: 40px auto; text-align: center; color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Login Tracker...</h1>
+  </header>
+
+  <section class="filters">
+    <input type="text" id="nameInput" placeholder="Search by Name..." />
+    <input type="date" id="dateInput" />
+  </section>
+
+  <main id="cards"></main>
+  <div id="empty" class="empty" style="display:none;">No records found</div>
+
+  <script>
+    // === CONFIG ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbzMSEa4bjcNzCjAdJYGG2y9jZIrZxAy5Aq0q2QNcnQtR_7jjN8l787hNzwBJIb4vrVx/exec?action=get"; // <- yaha URL paste karo
+
+    let ALL = []; // full dataset from server
+
+    // SweetAlert spinner while loading
+    Swal.fire({
+      title: 'Loading data...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading()
+    });
+
+    // Fetch data from Apps Script
+    fetch(API_URL)
+      .then(r => r.json())
+      .then(json => {
+        Swal.close();
+        if (json.status !== "success") throw new Error(json.message || "Unexpected response");
+        ALL = Array.isArray(json.data) ? json.data : [];
+        render(ALL);
+      })
+      .catch(err => {
+        Swal.close();
+        console.error(err);
+        Swal.fire("Error", "Failed to load data", "error");
+      });
+
+    // Render cards
+    function render(rows) {
+      const wrap = document.getElementById('cards');
+      const empty = document.getElementById('empty');
+      wrap.innerHTML = "";
+
+      if (!rows.length) {
+        empty.style.display = "block";
+        return;
+      }
+      empty.style.display = "none";
+
+      rows.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="name">${escapeHTML(item.name || "")}</div>
+          <div class="dt">${escapeHTML(item.datetime || "")}</div>
+        `;
+        wrap.appendChild(card);
+      });
+    }
+
+    // Filters
+    const nameInput = document.getElementById('nameInput');
+    const dateInput = document.getElementById('dateInput');
+    nameInput.addEventListener('input', applyFilters);
+    dateInput.addEventListener('change', applyFilters);
+
+    function applyFilters() {
+      const nameQ = (nameInput.value || "").trim().toLowerCase();
+      const dateVal = dateInput.value; // yyyy-mm-dd
+      let dateToken = "";
+
+      if (dateVal) {
+        // Convert yyyy-mm-dd -> "12 August 2025" (to match card text)
+        const d = new Date(dateVal + "T00:00:00");
+        // Use en-GB for "12 August 2025"
+        const opts = { day: '2-digit', month: 'long', year: 'numeric' };
+        dateToken = d.toLocaleDateString('en-GB', opts).toLowerCase();
+      }
+
+      const filtered = ALL.filter(row => {
+        const n = (row.name || "").toLowerCase();
+        const dt = (row.datetime || "").toLowerCase();
+
+        const matchName = !nameQ || n.includes(nameQ);
+        const matchDate = !dateToken || dt.includes(dateToken);
+        return matchName && matchDate;
+      });
+
+      render(filtered);
+    }
+
+    // Basic HTML escaping to avoid injecting markup
+    function escapeHTML(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
+
+<!----
+function doGet(e) {
+  // Public JSON endpoint for GitHub page to fetch
+  // Usage: GET https://script.google.com/macros/s/DEPLOYMENT_ID/exec?action=get
+  var action = (e && e.parameter && e.parameter.action) || "";
+  if (action === "get") {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName("Sheet1");
+    if (!sheet) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: "error", message: "Sheet1 not found" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var tz = Session.getScriptTimeZone() || "Asia/Kolkata";
+    var values = sheet.getDataRange().getValues(); // [[A,B,...], ...]
+    if (values.length <= 1) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ status: "success", data: [] }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    var data = [];
+    // i = last row -> 2 (skip header at row 1)
+    for (var i = values.length - 1; i >= 1; i--) {
+      var name = values[i][0];        // Col A
+      var dtRaw = values[i][1];       // Col B
+      if (!name) continue;
+
+      var pretty;
+      if (dtRaw instanceof Date) {
+        // 11:30am 12 August 2025
+        var timePart = Utilities.formatDate(dtRaw, tz, "hh:mma").toLowerCase(); // 11:30am
+        var datePart = Utilities.formatDate(dtRaw, tz, "dd MMMM yyyy");         // 12 August 2025
+        pretty = timePart + " " + datePart;
+      } else {
+        // Try parse string, else fallback as-is
+        var tryD = new Date(dtRaw);
+        if (!isNaN(tryD.getTime())) {
+          var timePart2 = Utilities.formatDate(tryD, tz, "hh:mma").toLowerCase();
+          var datePart2 = Utilities.formatDate(tryD, tz, "dd MMMM yyyy");
+          pretty = timePart2 + " " + datePart2;
+        } else {
+          pretty = String(dtRaw);
+        }
+      }
+
+      data.push({ name: String(name), datetime: pretty });
+    }
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "success", data: data }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Optional: a small help text if action missing
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: "error", message: "Use ?action=get" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
