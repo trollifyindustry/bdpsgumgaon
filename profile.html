@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Profile |Prem Janghela - Material Design</title>
+    <title>Profile | Bootstrap Based Admin Template - Material Design</title>
     <!-- Favicon-->
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -414,18 +414,22 @@
                         </div>
                         <div class="profile-footer">
                             <ul>
-                                <li>
-                                    <span>In the Account :</span>
-                                    <span><i style="color:green;font-weight:bold;font-size:17px;font-style:normal;">₹${data.inTheAccount}</i></span>
-                                </li>
-                                <li>
-                                    <span>Available for withdrawal :</span>
-                                    <span><i style="color:brawn;font-weight:bold;font-size:17px;font-style:normal;">₹${data.total}</i></span>
-                                    </li>
-                                <li>
-                                    <span>Total Withdrawals :</span>
-                                    <span><i style="color:red;font-weight:bold;font-size:17px;font-style:normal;">-₹${data.withdrawals}</i></span>
-                                  </li>
+                               <li>
+                                 <span>Pending Salary:</span>
+                                 <span><i style="color:green;font-weight:bold;font-size:17px;font-style:normal;">₹${data.pendingsalary}</i></span>
+                               </li>
+                             <li>
+                                <span>Received Salary:</span>
+                                <span><i style="color:red;font-weight:bold;font-size:17px;font-style:normal;">₹${data.receivedsalary}</i></span>
+                             </li>
+                             <li>
+                                <span>Total Earnings:</span>
+                                <span><i style="color:black;font-weight:bold;font-size:17px;font-style:normal;">₹${data.totalearnings}</i></span>
+                             </li>
+                            
+                            
+                            
+                     
                             </ul>
                             
                             <button type="button"  class="btn btn-primary m-t-15 waves-effect">Deposit Amount</button> <i style="color:#fff" > .......... </i>
@@ -443,56 +447,18 @@
                         <div class="header">
                             <h2>ABOUT ME</h2>
                         </div>
-                        <div class="body">
-                            <ul>
-                                <li>
-                                    <div class="title">
-                                        <i class="material-icons">library_books</i>
-                                        Education
-                                    </div>
-                                    <div class="content">
-                                     ${data.education}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="title">
-                                        <i class="material-icons">location_on</i>
-                                        Location
-                                    </div>
-                                    <div class="content">
-                                        ${data.location}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="title">
-                                        <i class="material-icons">edit</i>
-                                        Skills
-                                    </div>
-                                    <div class="content">
-                                        ${data.skills}<span class="label bg-amber"></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="title">
-                                        <i class="material-icons">notes</i>
-                                        Description
-                                    </div>
-                                    <div class="content">
-                            
-                                       ${data.description}
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                           <div class="body">
+                        
+                          </div>
                     </div>
-                </div>
+        </div>
                 
          
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <div class="card">
-                <div class="header bg-blue-grey">
+                <div class="header bg-brown">
                 <h2>
-                Action Buttons <small>Unique Id here... </small>
+                Personal Dashboard <small>Check your attendance, salary status, and personal records in one place etc.</small>
                 </h2>
                 <ul class="header-dropdown m-r--5">
                 <li>
@@ -506,20 +472,77 @@
                 </a>
                 <ul class="dropdown-menu pull-right">
                 <li><a href="javascript:void(0);">Action</a></li>
-                <li><a href="javascript:void(0);">Another action</a></li>
-                <li><a href="javascript:void(0);">Something else here</a></li>
                 </ul>
                 </li>
                 </ul>
                 </div>
                 <div class="body">
-                
-                <p>${data.admin}</p>
-  
-                <button  onclick="logout()" class="btn bg-black waves-effect" >Logout</button>
-                
+            <p>${data.mypanel}</p>
+            <button  onclick="logout()" class="btn bg-black waves-effect" >Logout</button>           
                 </div>
                 </div>
+             </div>
+             
+           
+             
+             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+             <div class="card">
+             <div class="header bg-blue-grey">
+             <h2>
+              Work Desk <small>Quick access to department tasks like student calling, admin login etc.</small>
+             </h2>
+             <ul class="header-dropdown m-r--5">
+             <li>
+             <a href="javascript:void(0);">
+             <i class="material-icons">mic</i>
+             </a>
+             </li>
+             <li class="dropdown">
+             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+             <i class="material-icons">more_vert</i>
+             </a>
+             <ul class="dropdown-menu pull-right">
+             <li><a href="javascript:void(0);">Action</a></li>
+             </ul>
+             </li>
+             </ul>
+             </div>
+             <div class="body">
+             <p>${data.departmentpanel}</p>
+             </div>
+             </div>
+             
+             </div>
+             
+             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+             <div class="card">
+             <div class="header bg-pink">
+             <h2>
+              Company Ads <small>..</small>
+             </h2>
+             <ul class="header-dropdown m-r--5">
+             <li>
+             <a href="javascript:void(0);">
+             <i class="material-icons">mic</i>
+             </a>
+             </li>
+             <li class="dropdown">
+             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+             <i class="material-icons">more_vert</i>
+             </a>
+             <ul class="dropdown-menu pull-right">
+             <li><a href="javascript:void(0);">Action</a></li>
+             </ul>
+             </li>
+             </ul>
+             </div>
+             <div class="body">
+             
+             <p>${data.companypanel}</p>
+             
+             
+             </div>
+             </div>
              </div>
                 
                 <div class="col-xs-12 col-sm-9">
@@ -712,9 +735,9 @@
      
 <style>
   .spinner {
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
+    border-radius:50% ;
+    width: 0px;
+    height: 0px;
     animation: spin 3s linear infinite; /* Continuous spinning animation */
   }
 
@@ -738,11 +761,11 @@
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;">
-  <img  class="spinner" src="https://i.postimg.cc/8PXxW98m/20250130-140045.png" alt="Loading..." width="100"   height="100">
-</div>
+  <img  class="spinner" src="https://i.postimg.cc/8PXxW98m/20250130-140045.png" alt="Loading..." width=""   height="">
+</div> 
 
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbzItH9KTF8heuszkqVqk_-Dr5m2cubhGikc7FTbzkiMmHjNt2mNAZfJiZcz16gHbP7n/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbz_ehzeH9RDrs9yRXDltZNfKmnfT9VX9nBqEbIyyUJM2oEKzjZ5qjIU3jmZ0zu3v9ug/exec';
 let userData;
 
 function showSpinner() {
@@ -753,43 +776,53 @@ function hideSpinner() {
   document.getElementById('spinner').style.display = 'none';
 }
 
-function fetchData() {
+function fetchData(forceUpdate = false) {
   const uniqueID = localStorage.getItem('uniqueID');
   if (!uniqueID) {
     window.location.href = "login.html";
     return;
   }
 
-  showSpinner(); // Show spinner initially
+  // Agar localStorage me data hai aur forceUpdate false hai to turant load kar do
+  if (!forceUpdate) {
+    const savedData = localStorage.getItem("userData");
+    if (savedData) {
+      userData = JSON.parse(savedData);
+      replacePlaceholdersWithData(userData);
+    }
+  }
 
+  // Background me hamesha fresh data fetch karo
+  showSpinner();
   fetch(`${API_URL}?uniqueID=${uniqueID}`)
     .then(response => response.json())
     .then(data => {
       if (data.status === 'success') {
-        userData = formatNumericData(data); // Format numeric values
-        replacePlaceholdersWithData(userData);
+        userData = formatNumericData(data);
+        localStorage.setItem("userData", JSON.stringify(userData)); // Save data locally
+        replacePlaceholdersWithData(userData); // Update UI
       } else {
         alert("Data not found!");
       }
-      hideSpinner(); // Hide spinner after data load
+      hideSpinner();
     })
     .catch(error => {
       console.error("Error fetching data:", error);
-      hideSpinner(); // Hide spinner on error
+      hideSpinner();
     });
 }
 
 function formatNumericData(data) {
   for (let key in data) {
     if (!isNaN(data[key]) && data[key] !== '') {
-      data[key] = parseFloat(data[key]).toFixed(2); // Ensure 2 decimal places
+      data[key] = parseFloat(data[key]).toFixed(2);
     }
   }
   return data;
 }
 
 function replacePlaceholdersWithData(data) {
-  data.total = data.inTheAccount ? (data.inTheAccount - 500).toFixed(2) : '0.00'; // Subtract 200 and format
+  data.total = data.inTheAccount ? (data.inTheAccount - 500).toFixed(2) : '0.00';
   document.body.innerHTML = document.body.innerHTML.replace(/\$\{data\.(\w+)\}/g, (match, key) => {
     return data[key] || '';
   });
@@ -809,10 +842,9 @@ function logout() {
   window.location.href = "login.html";
 }
 
-// Fetch data only once on load
+// Jab page load ho tabhi localStorage ka data dikhaye aur background me fresh fetch karwaye
 fetchData();
 </script>
-
 
 
 

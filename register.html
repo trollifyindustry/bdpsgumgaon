@@ -111,7 +111,7 @@
 
     <!-- Custom Js -->
 <script>
-  const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbyuIEjKwi6s2WKB1_AF16QeR5qKgLeTeup4JMSV8utLEj0GWcJ14p2HB4wyjKvwKUZi/exec';
+  const sheetApiUrl = 'https://script.google.com/macros/s/AKfycbz7W7oDp2xPzORgRIPmIGwqYCrEUdQKkf21clqdtU6LbMDPXyONu9Epc5I3xYvSxlqt/exec';
 
   async function checkAndSubmit() {
     const uniqueId = document.getElementById('uniqueId').value.trim();
@@ -210,8 +210,8 @@ function doGet(e) {
     uniqueId: row[0],
     fullName: row[1],
     post: row[2],
-    phone: row[11],
-    profilePhotoUrl: row[9]
+    phone: row[10],
+    profilePhotoUrl: row[6]
   }));
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
 }

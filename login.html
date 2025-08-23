@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>Sign In | Prem Janghela  - Material Design</title>
+    <title>Sign In | Bootstrap Based Admin Template - Material Design</title>
     <!-- Favicon-->
     <link rel="icon" href="../../favicon.ico" type="image/x-icon">
 
@@ -103,7 +103,7 @@
      
 
      
-    const API_URL = 'https://script.google.com/macros/s/AKfycbzItH9KTF8heuszkqVqk_-Dr5m2cubhGikc7FTbzkiMmHjNt2mNAZfJiZcz16gHbP7n/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbz_ehzeH9RDrs9yRXDltZNfKmnfT9VX9nBqEbIyyUJM2oEKzjZ5qjIU3jmZ0zu3v9ug/exec';
 
 
     
@@ -154,6 +154,8 @@
 
 
 <!---codegs-
+
+
 function doGet(e) {
   const uniqueID = e.parameter.uniqueID;
 
@@ -176,14 +178,16 @@ function doGet(e) {
         status: 'success',
         name: data[i][1],
         post: data[i][2],
-        inTheAccount: data[i][3],
-        withdrawals: data[i][4],
-        education: data[i][5],
-        location: data[i][6],
-        skills: data[i][7],
-        description: data[i][8],
-        photo: data[i][9],
-        admin: data[i][10]
+        pendingsalary: data[i][3],
+        receivedsalary: data[i][4],
+        totalearnings: data[i][5],
+        photo: data[i][6],
+        mypanel: data[i][7],
+        departmentpanel: data[i][8],
+        companypanel: data[i][9],
+        
+        
+        
       };
       return ContentService.createTextOutput(JSON.stringify(result))
                            .setMimeType(ContentService.MimeType.JSON);
