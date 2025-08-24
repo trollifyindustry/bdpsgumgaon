@@ -2,35 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>User Traking </title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Tracking</title>
   <style>
     /* Whole Page */
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background: #f5f7fa;
       font-family: "Poppins", sans-serif;
-      color: #fff;
+      color: #333;
+      padding: 20px;
     }
 
     /* Form Box */
     #myForm {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 30px 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(12px);
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 30px 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
       text-align: center;
-      transition: all 0.3s ease-in-out;
+      animation: fadeIn 0.6s ease-in-out;
     }
 
-    #myForm:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    #myForm h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      color: #222;
     }
 
     /* Input */
@@ -38,121 +41,110 @@
       width: 100%;
       padding: 12px 15px;
       margin-bottom: 20px;
-      border: none;
-      border-radius: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
       outline: none;
       font-size: 16px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
       transition: 0.3s;
+      background: #fafafa;
     }
 
     #name:focus {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 8px #00ffcc;
+      border-color: #007bff;
+      background: #fff;
+      box-shadow: 0 0 6px rgba(0,123,255,0.25);
     }
 
     /* Button */
     button {
       width: 100%;
-      padding: 12px 15px;
+      padding: 12px;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
       color: #fff;
       background: linear-gradient(135deg, #00c6ff, #0072ff);
-      box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
+      box-shadow: 0 5px 15px rgba(0, 114, 255, 0.3);
       transition: all 0.3s ease-in-out;
     }
 
     button:hover {
       background: linear-gradient(135deg, #0072ff, #00c6ff);
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+      box-shadow: 0 8px 20px rgba(0, 114, 255, 0.4);
     }
 
     /* Smooth Animation */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    #myForm {
-      animation: fadeIn 0.8s ease-in-out;
+    /* Responsive Text Sizes */
+    @media (max-width: 500px) {
+      #myForm {
+        padding: 20px 15px;
+      }
+      #myForm h2 {
+        font-size: 1.2rem;
+      }
     }
   </style>
 </head>
 <body>
   <form id="myForm">
-    <h2 style="margin-bottom:15px;">🗣️ Your Full Name...?</h2>
+    <h2>🚀 Your Name...?</h2>
     <input type="text" id="name" name="name" placeholder="Enter your name" required>
-    <button type="submit">Next...</button>
+    <button type="submit">Submit</button>
   </form>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlpHAjKoH-epRVoIAyRjlESLxtmERWCbiJpdeQSasLGmNfO4K1bu7lBDABY8MNLY3F/exec";
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlpHAjKoH-epRVoIAyRjlESLxtmERWCbiJpdeQSasLGmNfO4K1bu7lBDABY8MNLY3F/exec";
 
-    function saveName(name) {
-      const expiry = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
-      localStorage.setItem("userName", name);
-      localStorage.setItem("expiry", expiry);
+  function saveName(name) {
+    const expiry = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+    localStorage.setItem("userName", name);
+    localStorage.setItem("expiry", expiry);
+  }
+
+  function getSavedName() {
+    const name = localStorage.getItem("userName");
+    const expiry = localStorage.getItem("expiry");
+    if (name && expiry && new Date().getTime() < expiry) {
+      return name;
     }
+    return null;
+  }
 
-    function getSavedName() {
-      const name = localStorage.getItem("userName");
-      const expiry = localStorage.getItem("expiry");
-      if (name && expiry && new Date().getTime() < expiry) {
-        return name;
-      }
-      return null;
+  function submitDataInBackground(name) {
+    // Fire & forget — fast redirect
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      body: new URLSearchParams({ name })
+    }).catch(err => console.error("Background submit failed:", err));
+  }
+
+  document.getElementById("myForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("name").value.trim();
+    if (name) {
+      saveName(name);
+      submitDataInBackground(name);
+      window.location.href = "https://bdpsgumgaon.netlify.app/profile.html"; // redirect instantly
     }
+  });
 
-    function submitData(name) {
-      Swal.fire({
-        title: 'Loading...',
-        text: 'Please wait',
-        allowOutsideClick: false,
-        background: '#1e293b',
-        color: '#fff',
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
-
-      fetch(SCRIPT_URL, {
-        method: "POST",
-        body: new URLSearchParams({ name })
-      })
-      .then(res => res.json())
-      .then(() => {
-        Swal.close();
-        window.location.href = "https://bdpsgumgaon.netlify.app/profile.html";
-      })
-      .catch(err => {
-        Swal.fire("Error!", "Failed to submit data", "error");
-        console.error(err);
-      });
+  window.onload = function() {
+    const savedName = getSavedName();
+    if (savedName) {
+      document.getElementById("name").value = savedName;
+      submitDataInBackground(savedName);
+      window.location.href = "https://bdpsgumgaon.netlify.app/profile.html"; // redirect instantly
     }
-
-    document.getElementById("myForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const name = document.getElementById("name").value.trim();
-      if (name) {
-        saveName(name);
-        submitData(name);
-      }
-    });
-
-    window.onload = function() {
-      const savedName = getSavedName();
-      if (savedName) {
-        document.getElementById("name").value = savedName;
-        submitData(savedName);
-      }
-    }
-  </script>
+  }
+</script>
 </body>
 </html>
 <!---
