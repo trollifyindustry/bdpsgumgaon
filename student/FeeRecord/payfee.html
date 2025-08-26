@@ -237,7 +237,7 @@
             },
             body: JSON.stringify(payload)
           })
-          .then(resp => resp.json ? resp.json() : resp.text())
+          .then(resp => resp.json())
           .then(res => {
             // If Apps Script returns text (rare) handle gracefully
             let data = res;
