@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Pay Fee - Student Fee System</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f1720;
+      color: #edf2f7;
+      margin: 0;
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .card {
+      width: 100%;
+      max-width: 640px;
+      background: #0b1220;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    }
+    h2 { color: #7efc7e; text-align: center; margin-top: 0; }
+    .row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .col { flex: 1; display: flex; flex-direction: column; }
+    label { font-size: 13px; margin-bottom: 6px; color: #cfead0; }
+    input[type="text"], input[type="number"], input[type="date"], select, textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #203040;
+      background: #071018;
+      color: #e6f7e6;
+      outline: none;
+      font-size: 15px;
+    }
+    textarea { min-height: 80px; resize: vertical; }
+    .actions { display:flex; gap:12px; justify-content:center; margin-top:16px; }
+    button {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .btn-submit { background: #7efc7e; color: #022; }
+    .btn-cancel { background: transparent; color: #7efc7e; border: 1px solid #234; }
+    .small-muted { font-size:12px; color:#9fb39f; text-align:center; margin-top:8px; }
+    @media (max-width:600px) {
+      .row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2> Student Fee 2025-26</h2>
+
+    <div class="row">
+      <div class="col">
+        <label for="scholarNo">Scholar No.</label>
+        <input id="scholarNo" type="text" readonly />
+      </div>
+      <div class="col">
+        <label for="amount">Amount (₹)</label>
+        <input id="amount" type="number" min="0" step="1" placeholder="Enter amount" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="paymentDate">Payment Date</label>
+        <input id="paymentDate" type="date" />
+      </div>
+      <div class="col">
+        <label for="payerName">Payer Name</label>
+        <input id="payerName" type="text" placeholder="Payer full name" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="paymentMode">Payment Mode</label>
+        <select id="paymentMode">
+          <option value="">-- Select Mode --</option>
+          <option value="Cash">Cash</option>
+          <option value="Phone Pay">Phone Pay</option>
+          <option value="Bank">Bank</option>
+          <option value="UPI">UPI</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="receivedBy">Received By</label>
+        <select id="receivedBy">
+          <option value="">-- Select Receiver --</option>
+          <option value="Vandana Sulakhiya">Vandana Sulakhiya</option>
+          <option value="Varsha Sulakhiya">Varsha Sulakhiya</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col" style="flex:1">
+        <label for="remarks">Remarks</label>
+        <textarea id="remarks" placeholder="Optional remarks..."></textarea>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-submit" id="submitBtn">Submit Payment</button>
+      <button class="btn-cancel" id="backBtn">Back to List</button>
+    </div>
+
+    <p class="small-muted">Form will send data to database via your web app. </p>
+  </div>
+
+  <script>
+    // === Change this if your Apps Script URL is different ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbxnrGu7eoATCFk4aFbBdM4WqKzac8T9G7ZNJQm1BxaVLVqrB8Bc_yItyuIf3x_YtBkw/exec";
+
+    // Helper: get query param
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    // Prefill scholar number (read only)
+    const scholarInput = document.getElementById("scholarNo");
+    const paramScholar = getQueryParam("scholar") || getQueryParam("scholarNo") || "";
+    if (paramScholar) {
+      scholarInput.value = paramScholar;
+    } else {
+      scholarInput.value = "";
+    }
+
+    // Set default date to today
+    const dateInput = document.getElementById("paymentDate");
+    (function setToday(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      let mm = d.getMonth() + 1;
+      let dd = d.getDate();
+      if (mm < 10) mm = '0' + mm;
+      if (dd < 10) dd = '0' + dd;
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+    })();
+
+    // Buttons
+    document.getElementById("backBtn").addEventListener("click", function(){
+      // Return to index with scholar param if exists
+      if (scholarInput.value) {
+        window.location.href = `index.html?scholar=${encodeURIComponent(scholarInput.value)}`;
+      } else {
+        window.location.href = "studentList.html";
+      }
+    });
+
+    document.getElementById("submitBtn").addEventListener("click", function(){
+      submitPayment();
+    });
+
+    // Main submit function
+    function submitPayment() {
+      const scholar = scholarInput.value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const paymentDate = document.getElementById("paymentDate").value;
+      const payerName = document.getElementById("payerName").value.trim();
+      const paymentMode = document.getElementById("paymentMode").value;
+      const receivedBy = document.getElementById("receivedBy").value;
+      const remarks = document.getElementById("remarks").value.trim();
+
+      // Basic validation
+      if (!scholar) {
+        Swal.fire("Error", "Scholar number missing.", "error");
+        return;
+      }
+      if (!amount || Number(amount) <= 0) {
+        Swal.fire("Error", "Please enter a valid amount.", "error");
+        return;
+      }
+      if (!paymentDate) {
+        Swal.fire("Error", "Please choose payment date.", "error");
+        return;
+      }
+      if (!payerName) {
+        Swal.fire("Error", "Please enter payer name.", "error");
+        return;
+      }
+      if (!paymentMode) {
+        Swal.fire("Error", "Please select payment mode.", "error");
+        return;
+      }
+      if (!receivedBy) {
+        Swal.fire("Error", "Please select who received the payment.", "error");
+        return;
+      }
+
+      // Confirmation
+      Swal.fire({
+        title: 'Are you sure?',
+        html: `Pay ₹ <b>${amount}</b> for Scholar No: <b>${scholar}</b>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, submit',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Show processing
+          Swal.fire({
+            title: 'Processing',
+            text: 'Sending data to server...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+          });
+
+          // Prepare payload required by your Apps Script (action=addTransaction)
+          const payload = {
+            action: "addTransaction",
+            scholar: scholar,
+            amount: amount,
+            paymentDate: paymentDate,
+            payerName: payerName,
+            paymentMode: paymentMode,
+            receivedBy: receivedBy,
+            remarks: remarks
+          };
+
+          // POST JSON
+          fetch(API_URL + "?action=addTransaction", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          })
+          .then(resp => resp.json ? resp.json() : resp.text())
+          .then(res => {
+            // If Apps Script returns text (rare) handle gracefully
+            let data = res;
+            if (typeof res === "string") {
+              try { data = JSON.parse(res); } catch(e) { data = { status: "unknown", message: res }; }
+            }
+
+            Swal.close();
+            if (data && data.status === "ok") {
+              Swal.fire({
+                title: "Success",
+                html: `Payment recorded successfully.<br><b>Amount:</b> ₹${amount}<br><b>Scholar:</b> ${scholar}`,
+                icon: "success"
+              }).then(() => {
+                // Optionally redirect to index with scholar param to view updated transactions
+                window.location.href = `studentList.html`;
+              });
+            } else {
+              const msg = (data && (data.message || JSON.stringify(data))) || "Unknown server response";
+              Swal.fire("Error", "Failed to save payment: " + msg, "error");
+            }
+          })
+          .catch(err => {
+            Swal.close();
+            console.error(err);
+            Swal.fire("Error", "Network or server error. See console for details.", "error");
+          });
+        } // end if confirmed
+      });
+    }
+  </script>
+</body>
+</html>
+
+<!----- code gs  jaha se scholar a rha hai bahi baka web url lagega --->

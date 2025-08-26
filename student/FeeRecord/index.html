@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Profile | Bootstrap Based Admin Template - Material Design</title>
+    <!-- Favicon-->
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/themes/all-themes.css" rel="stylesheet" />
+</head>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Trollify Industry</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="#">BDPS GUMGAON</a>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section class="content">
+          <div class="block-header">
+       <small> <div class="form-group form-float">
+           <div class="form-line">
+              <input type="text" class="form-control" id="scholarInput">
+           <label class="form-label">Enter Scholar No.</label>
+          </div>
+       </div>
+           
+</small>
+          
+          </div> 
+        <div class="container-fluid" id="studentCard">
+            <div class="row clearfix">
+                <div class="col-xs-12 col-sm-3">
+                    
+                    <div class="card profile-card">
+                        <div class="profile-header">&nbsp;</div>
+                        <div class="profile-body">
+                            <div class="image-area">
+                                <img style="width:35%;" id="studentPhoto"src="" alt="Profile Photo - Powered by Trollify Industry host id @prem_janghela "/>
+                            </div>
+                            <div class="content-area">
+                               <h3 id="studentName"></h3>
+                               <p>Session - 2025-26</p>
+                               <p><u>Scholar No - </u><u id="studentScholar"></u></p>
+                 
+                             </div>                     
+                        </div>
+                        <div class="profile-footer">
+                            <ul>
+                                <li>
+                                  <span>Total Fee :</span>
+                                  <span>₹ <i style="color:black;font-weight:bold;font-size:17px;font-style:normal;" id="studentTotalFee"></i></span>
+                               </li>
+                                
+                                <li>
+                                    <span>Pending Fee :</span>
+                                    <span>₹ <i style="color:red;font-weight:bold;font-size:17px;font-style:normal;" id="pendingFee"></i></span>
+                                 </li>
+                                
+                                <li>
+                                    <span>Total Paid Fee:</span>
+                                    <span>₹ <i style="color:green;font-weight:bold;font-size:17px;font-style:normal;" id="totalPaid"></i></span>
+                               </li>
+                            </ul>
+      
+   
+                          <button type="button" onclick="goToPayFee()" class="btn btn-primary btn-lg waves-effect btn-block">Pay Fee</button>
+                          
+                        </div>
+                    </div>
+<div class="card card-about-me">
+    <div class="header">
+        <h2>ABOUT STUDENT</h2>
+    </div>
+    <div class="body">
+        <ul>
+            <li>
+                <div class="title">
+                    <i class="material-icons">school</i>
+                  Class - <span id="studentClass"></span>
+                </div>
+                <div class="content">
+
+                </div>
+            </li>
+            <li>
+                <div class="title">
+                    <i class="material-icons">person</i>
+                    Father - <span id="studentFather"></span>
+                </div>
+                <div class="content">
+                    
+                </div>
+            </li>
+            <li>
+                <div class="title">
+                    <i class="material-icons">accessibility</i>
+                    Gender - <span  id="studentGender"></span>
+                </div>
+                <div class="content">
+                    
+      </div>
+            </li>
+        </ul>
+    </div>
+</div>
+               
+
+               
+                
+                
+                
+                
+                
+           </div>
+                
+<!-- Striped Rows -->
+
+      <div class="col-xs-12 col-sm-9">
+
+        <div class="card">
+            <div class="header">
+                <h2>
+                    Fee Transactions
+                    <small></small>
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <i class="material-icons">more_vert</i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="javascript:void(0);">Action</a></li>
+                            <li><a href="javascript:void(0);">Another action</a></li>
+                            <li><a href="javascript:void(0);">Something else here</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="body table-responsive">
+                <table id="txnTable" class="table table-striped">
+                 <thead>
+                  <tr>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Payer</th>
+                    <th>Mode</th>
+                    <th>Received By</th>
+                    <th>Remarks</th>
+                   </tr>
+                 </thead>
+                <tbody></tbody>
+               </table>
+            </div>
+
+    </div>
+</div>
+<!-- #END# Striped Rows -->
+
+                
+         
+              
+            
+        </div>
+        
+        
+        </section>
+
+
+ 
+
+<script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxnrGu7eoATCFk4aFbBdM4WqKzac8T9G7ZNJQm1BxaVLVqrB8Bc_yItyuIf3x_YtBkw/exec";
+    let currentScholar = "";
+
+    // 🔹 Run search when pressing Enter
+    document.getElementById("scholarInput").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        searchStudent();
+      }
+    });
+
+    // 🔹 Auto search when scholar number length ≥ 3
+    document.getElementById("scholarInput").addEventListener("input", function(e) {
+      const val = e.target.value.trim();
+      if (val.length >= 3) {
+        searchStudent();
+      }
+    });
+
+    function searchStudent() {
+      const scholar = document.getElementById("scholarInput").value.trim();
+      if (!scholar) return;
+
+      currentScholar = scholar;
+      Swal.fire({
+        title: 'Loading...',
+        text: 'Fetching student data',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      fetch(`${API_URL}?action=getStudentWithTotals&scholar=${scholar}`)
+        .then(res => res.json())
+        .then(data => {
+          Swal.close();
+          if (data.status !== "ok") {
+            document.getElementById("studentCard").style.display = "none";
+            Swal.fire("Not Found", "No student found with Scholar No " + scholar, "error");
+            return;
+          }
+
+          // show card
+          document.getElementById("studentCard").style.display = "block";
+
+          const student = data.student;
+          document.getElementById("studentPhoto").src = student.photoURL || "https://via.placeholder.com/120";
+          document.getElementById("studentName").innerText = student.name;
+          document.getElementById("studentScholar").innerText = student.scholarNo;
+          document.getElementById("studentFather").innerText = student.father;
+          document.getElementById("studentGender").innerText = student.gender;
+          document.getElementById("studentClass").innerText = student.class;
+          document.getElementById("studentTotalFee").innerText = student.totalFee;
+
+          // transactions
+          const tbody = document.querySelector("#txnTable tbody");
+          tbody.innerHTML = "";
+          data.transactions.forEach(tx => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>₹${tx.amount}</td>
+              <td>${formatDate(tx.paymentDate)}</td>
+              <td>${tx.payerName}</td>
+              <td>${tx.paymentMode}</td>
+              <td>${tx.receivedBy}</td>
+              <td>${tx.remarks}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          document.getElementById("totalPaid").innerText = data.totalPaid;
+          document.getElementById("pendingFee").innerText = data.pendingFee;
+        })
+        .catch(err => {
+          Swal.close();
+          Swal.fire("Error", "Failed to fetch data", "error");
+          console.error(err);
+        });
+    }
+
+    function goToPayFee() {
+      if (!currentScholar) {
+        Swal.fire("Error", "Please search a student first", "error");
+        return;
+      }
+      window.location.href = `payfee.html?scholar=${currentScholar}`;
+    }
+    // helper function for date
+    function formatDate(isoDate) {
+    if (!isoDate) return "";
+    const d = new Date(isoDate);
+    const day = String(d.getDate()).padStart(2, "0");
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const year = d.getFullYear();
+    return `${day}-${month}-${year}`;
+    }
+  </script>
+<script>
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    if(params.has("scholarNo")) {
+      document.getElementById("scholarInput").value = params.get("scholarNo");
+      searchStudent(); // ✅ auto search run after full page load
+    }
+  };
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Jquery Core Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery/jquery.min.js"></script>
+
+
+    <!-- Bootstrap Core Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.js"></script>
+
+    <!-- Custom Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/js/admin.js"></script>
+    <script src="https://trollifyindustry.github.io/premjanghela/js/pages/examples/profile.js"></script>
+
+    <!-- Demo Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/js/demo.js"></script>
+</body>
+
+</html>
+
+
+<!---------/*******************************
+  Code.gs - Student Fee System
+  - Sheet1 name: "Sheet1" (students)
+    Columns: A ScholarNo, B Name, C Father, D Gender, E Class, F TotalFee, G PhotoURL
+  - Sheet2 name: "Sheet2" (transactions)
+    Columns: A ScholarNo, B Amount, C PaymentDate, D PayerName, E PaymentMode, F ReceivedBy, G Remarks
+
+  Usage (GET):
+    /exec?action=getStudent&scholar=101
+    /exec?action=getTransactions&scholar=101
+    /exec?action=getStudentWithTotals&scholar=101
+    /exec?action=getStudentWithTotals&scholar=101&callback=mycb   (JSONP)
+
+  Usage (POST) to add transaction:
+    POST /exec?action=addTransaction
+    Content-Type: application/json
+    Body example:
+      {
+        "scholar":"101",
+        "amount":"500",
+        "paymentDate":"2025-08-25",
+        "payerName":"Prem",
+        "paymentMode":"Cash",
+        "receivedBy":"Admin",
+        "remarks":"Monthly fee"
+      }
+    OR send as form-encoded (application/x-www-form-urlencoded)
+
+  Deploy as Web App:
+    - Deploy -> New deployment -> Select "Web app"
+    - Execute as: Me
+    - Who has access: Anyone (even anonymous)
+*******************************/
+
+const STUDENT_SHEET_NAME = "Sheet1";
+const TRANS_SHEET_NAME = "Sheet2";
+
+/** Helper: create JSON or JSONP output **/
+function makeOutput_(obj, callback) {
+  const json = JSON.stringify(obj);
+  if (callback) {
+    // JSONP response
+    return ContentService
+      .createTextOutput(callback + "(" + json + ")")
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  } else {
+    return ContentService
+      .createTextOutput(json)
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/** doGet: routes read requests */
+function doGet(e) {
+  try {
+    const params = e.parameter || {};
+    const action = (params.action || "").toString();
+    const callback = params.callback; // optional JSONP
+
+    if (!action) {
+      return makeOutput_({ status: "error", message: "Missing 'action' parameter." }, callback);
+    }
+
+    if (action === "getStudent") {
+      const scholar = params.scholar;
+      if (!scholar) return makeOutput_({ status: "error", message: "Missing 'scholar' parameter." }, callback);
+      const student = getStudentByScholar_(scholar);
+      if (!student) return makeOutput_({ status: "not_found", message: "Student not found", scholar: scholar }, callback);
+      return makeOutput_({ status: "ok", student: student }, callback);
+    }
+
+    if (action === "getTransactions") {
+      const scholar = params.scholar;
+      if (!scholar) return makeOutput_({ status: "error", message: "Missing 'scholar' parameter." }, callback);
+      const tx = getTransactionsByScholar_(scholar);
+      return makeOutput_({ status: "ok", scholar: scholar, transactions: tx }, callback);
+    }
+
+    if (action === "getStudentWithTotals") {
+      const scholar = params.scholar;
+      if (!scholar) return makeOutput_({ status: "error", message: "Missing 'scholar' parameter." }, callback);
+      const student = getStudentByScholar_(scholar);
+      if (!student) return makeOutput_({ status: "not_found", message: "Student not found", scholar: scholar }, callback);
+      const tx = getTransactionsByScholar_(scholar);
+      const totalPaid = tx.reduce((s, r) => s + (Number(r.amount) || 0), 0);
+      const totalFee = Number(student.totalFee) || 0;
+      const pending = Math.max(0, totalFee - totalPaid);
+      return makeOutput_({ status: "ok", student: student, transactions: tx, totalPaid: totalPaid, pendingFee: pending }, callback);
+    }
+
+    return makeOutput_({ status: "error", message: "Unknown action: " + action }, callback);
+  } catch (err) {
+    return makeOutput_({ status: "error", message: err.message || err.toString() });
+  }
+}
+
+/** doPost: add transaction (action=addTransaction) */
+function doPost(e) {
+  try {
+    const params = e.parameter || {};
+    const action = (params.action || (e.postData && tryParseJson_(e.postData.contents) && tryParseJson_(e.postData.contents).action) || "").toString();
+
+    // parse body if JSON
+    let body = {};
+    if (e.postData && e.postData.contents) {
+      const contentType = (e.postData.type || "").toLowerCase();
+      if (contentType.indexOf("application/json") !== -1) {
+        body = tryParseJson_(e.postData.contents) || {};
+      } else {
+        // form-encoded fallback: Apps Script already put keys in e.parameter
+        body = Object.assign({}, params);
+      }
+    } else {
+      body = Object.assign({}, params);
+    }
+
+    if (!action && body.action) {
+      // ok
+    }
+
+    const finalAction = action || body.action;
+    if (!finalAction) {
+      return makeOutput_({ status: "error", message: "Missing 'action' parameter (POST)." });
+    }
+
+    if (finalAction === "addTransaction") {
+      // required fields
+      const scholar = (body.scholar || "").toString().trim();
+      const amount = (body.amount || "").toString().trim();
+      const paymentDate = (body.paymentDate || body.payment_date || new Date().toISOString().slice(0,10)).toString();
+      const payerName = (body.payerName || body.payer_name || "").toString().trim();
+      const paymentMode = (body.paymentMode || body.payment_mode || "").toString().trim();
+      const receivedBy = (body.receivedBy || body.received_by || "").toString().trim();
+      const remarks = (body.remarks || "").toString().trim();
+
+      if (!scholar || !amount) {
+        return makeOutput_({ status: "error", message: "Required fields missing: scholar and amount." });
+      }
+
+      const added = addTransaction_(scholar, amount, paymentDate, payerName, paymentMode, receivedBy, remarks);
+      if (added) {
+        return makeOutput_({ status: "ok", message: "Transaction added.", transaction: added });
+      } else {
+        return makeOutput_({ status: "error", message: "Failed to append transaction." });
+      }
+    }
+
+    return makeOutput_({ status: "error", message: "Unknown POST action: " + finalAction });
+  } catch (err) {
+    return makeOutput_({ status: "error", message: err.message || err.toString() });
+  }
+}
+
+/** Utility: find student row by scholar number (exact match) */
+function getStudentByScholar_(scholar) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(STUDENT_SHEET_NAME);
+  if (!sheet) throw new Error("Sheet not found: " + STUDENT_SHEET_NAME);
+
+  const values = sheet.getDataRange().getValues(); // includes header row if any
+  // Try to detect header by checking first row values
+  const startRow = 1; // assuming first row is data. If you have header, set startRow = 2 and adjust.
+  // We'll attempt to find scholar in column A anywhere
+  for (let r = 0; r < values.length; r++) {
+    const row = values[r];
+    if (!row) continue;
+    const cell = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : "";
+    if (cell === String(scholar).trim()) {
+      return {
+        rowNumber: r + 1,
+        scholarNo: row[0],
+        name: row[1] || "",
+        father: row[2] || "",
+        gender: row[3] || "",
+        class: row[4] || "",
+        totalFee: row[5] || 0,
+        photoURL: row[6] || ""
+      };
+    }
+  }
+  return null;
+}
+
+/** Utility: get all transactions for a scholar (returns array of objects) */
+function getTransactionsByScholar_(scholar) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(TRANS_SHEET_NAME);
+  if (!sheet) throw new Error("Sheet not found: " + TRANS_SHEET_NAME);
+
+  const values = sheet.getDataRange().getValues();
+  const results = [];
+  for (let r = 0; r < values.length; r++) {
+    const row = values[r];
+    if (!row) continue;
+    const cell = (row[0] !== undefined && row[0] !== null) ? String(row[0]).trim() : "";
+    if (cell === String(scholar).trim()) {
+      results.push({
+        rowNumber: r + 1,
+        scholarNo: row[0],
+        amount: (row[1] !== undefined && row[1] !== null) ? row[1] : "",
+        paymentDate: row[2] || "",
+        payerName: row[3] || "",
+        paymentMode: row[4] || "",
+        receivedBy: row[5] || "",
+        remarks: row[6] || ""
+      });
+    }
+  }
+  // Optionally sort by paymentDate descending if dates are ISO-like
+  results.sort(function(a,b){
+    const da = new Date(a.paymentDate || "1970-01-01");
+    const db = new Date(b.paymentDate || "1970-01-01");
+    return db - da;
+  });
+  return results;
+}
+
+/** Utility: append a transaction row to Sheet2 */
+function addTransaction_(scholar, amount, paymentDate, payerName, paymentMode, receivedBy, remarks) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(TRANS_SHEET_NAME);
+  if (!sheet) throw new Error("Sheet not found: " + TRANS_SHEET_NAME);
+
+  // Normalize date to string. If paymentDate is Date object, convert to ISO or sheet's format
+  let dateToWrite = paymentDate;
+  if (paymentDate instanceof Date) {
+    dateToWrite = Utilities.formatDate(paymentDate, ss.getSpreadsheetTimeZone(), "yyyy-MM-dd");
+  }
+
+  const row = [ String(scholar).trim(), Number(amount) || amount, dateToWrite, payerName || "", paymentMode || "", receivedBy || "", remarks || "" ];
+  sheet.appendRow(row);
+
+  // Return the appended object
+  return {
+    scholarNo: row[0],
+    amount: row[1],
+    paymentDate: row[2],
+    payerName: row[3],
+    paymentMode: row[4],
+    receivedBy: row[5],
+    remarks: row[6]
+  };
+}
+
+/** Safe JSON parse helper */
+function tryParseJson_(txt) {
+  try {
+    return JSON.parse(txt);
+  } catch (e) {
+    return null;
+  }
+}
