@@ -22,9 +22,25 @@
       border: none;
       cursor: pointer;
       transition: background 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    button:hover {
+    button.loading {
       background-color: #2d8ddb;
+    }
+    .spinner {
+      border: 2px solid #fff;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .table-container {
@@ -58,27 +74,34 @@
     }
 
     /* Status colors */
-    .status-A { background-color: #f8d7da; color: #721c24; font-weight: bold; }
+    .status-A, .status-S { background-color: #f8d7da; color: #721c24; font-weight: bold; }
     .status-P { background-color: #d4edda; color: #155724; font-weight: bold; }
     .status-H { background-color: #fff3cd; color: #856404; font-weight: bold; }
     .status-HD { background-color: #fce4ec; color: #ad1457; font-weight: bold; }
+  
   </style>
 </head>
 <body>
   <h2>📊 Teacher Attendance & Salary Report</h2>
-<input type="password" id="codeInput" placeholder="Enter ID">
-  <button onclick="searchCode()">Search</button>
+  <input type="password" id="codeInput" placeholder="Enter ID">
+  <button id="searchBtn" onclick="searchCode()">Search</button>
 
   <div class="table-container" id="result"></div>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbw-HmPtiaGNaJ85CnH4AL6e_9PSTcZfSE3EXnUAlDscSGZeFWj5IoMvvgS7Rxf7GekC/exec";
 
-    // Auto-fill from localStorage
+    // On load, show saved data immediately
     window.onload = () => {
       const savedCode = localStorage.getItem("searchCode");
+      const savedData = localStorage.getItem("lastData");
       if (savedCode) {
         document.getElementById("codeInput").value = savedCode;
+      }
+      if (savedData) {
+        document.getElementById("result").innerHTML = savedData;
+      }
+      if (savedCode) {
         searchCode(savedCode);
       }
     };
@@ -101,22 +124,20 @@
 
       localStorage.setItem("searchCode", code);
 
-      Swal.fire({
-        title: 'Loading...',
-        html: 'Fetching data, please wait...',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
+      // Show spinner on button
+      const btn = document.getElementById("searchBtn");
+      btn.disabled = true;
+      btn.classList.add("loading");
+      btn.innerHTML = `Searching <div class="spinner"></div>`;
 
       fetch(`${scriptURL}?code=${encodeURIComponent(code)}`)
         .then(response => response.json())
         .then(data => {
-          Swal.close();
-
           if (data.rows.length === 0) {
             document.getElementById("result").innerHTML = "<p style='padding:10px;'>No matching records found.</p>";
+            btn.disabled = false;
+            btn.classList.remove("loading");
+            btn.innerHTML = "Search";
             return;
           }
 
@@ -143,6 +164,7 @@
               const status = cellText.trim().toLowerCase();
               let className = "";
               if (status === "a") className = "status-A";
+              else if (status === "s") className = "status-S";
               else if (status === "p") className = "status-P";
               else if (status === "h") className = "status-H";
               else if (status === "hd" || status === "h d" || status === "half-day" || status === "halfday") className = "status-HD";
@@ -154,10 +176,20 @@
 
           html += "</table>";
           document.getElementById("result").innerHTML = html;
+
+          // Save final rendered table in localStorage
+          localStorage.setItem("lastData", html);
+
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.innerHTML = "Search";
         })
         .catch(err => {
           Swal.fire("Error", "Failed to fetch data. Please try again.", "error");
           console.error("Fetch error:", err);
+          btn.disabled = false;
+          btn.classList.remove("loading");
+          btn.innerHTML = "Search";
         });
     }
   </script>
