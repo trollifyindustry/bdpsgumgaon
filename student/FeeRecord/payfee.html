@@ -1,275 +1,228 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Pay Fee - Student Fee System</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Fee Submit</title>  <!-- SweetAlert2 -->  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --muted:#9fb39f; --text:#e8ffe8; --accent:#7efc7e; --line:#1f2a3a;
+    }
+    *{ box-sizing:border-box }
+    body{ margin:0; min-height:100vh; display:grid; place-items:center; background:linear-gradient(180deg,#0a101a,#0b1220 40%, #060b12); color:var(--text); font-family:system-ui, Arial, sans-serif; padding:24px }
+    .card{ width:min(880px,100%); background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:0 12px 40px rgba(0,0,0,.45) }
+    h2{ margin:0 0 14px; text-align:center; color:var(--accent); letter-spacing:.3px }
+    p.hint{ margin:0 0 18px; text-align:center; color:var(--muted); font-size:.95rem }
 
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    form{ display:grid; gap:14px }
+    .row{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px }
+    label{ font-size:.85rem; color:#cfead0; margin-bottom:6px; display:block }
+    input, select, textarea{
+      width:100%; padding:11px 12px; border-radius:10px; border:1px solid var(--line);
+      background:#071018; color:var(--text); outline:none; font-size:15px;
+    }
+    textarea{ min-height:92px; resize:vertical }
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f1720;
-      color: #edf2f7;
-      margin: 0;
-      padding: 24px;
-      display: flex;
-      justify-content: center;
-    }
-    .card {
-      width: 100%;
-      max-width: 640px;
-      background: #0b1220;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-    }
-    h2 { color: #7efc7e; text-align: center; margin-top: 0; }
-    .row { display: flex; gap: 12px; margin-bottom: 12px; }
-    .col { flex: 1; display: flex; flex-direction: column; }
-    label { font-size: 13px; margin-bottom: 6px; color: #cfead0; }
-    input[type="text"], input[type="number"], input[type="date"], select, textarea {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #203040;
-      background: #071018;
-      color: #e6f7e6;
-      outline: none;
-      font-size: 15px;
-    }
-    textarea { min-height: 80px; resize: vertical; }
-    .actions { display:flex; gap:12px; justify-content:center; margin-top:16px; }
-    button {
-      padding: 10px 16px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      font-weight: 700;
-    }
-    .btn-submit { background: #7efc7e; color: #022; }
-    .btn-cancel { background: transparent; color: #7efc7e; border: 1px solid #234; }
-    .small-muted { font-size:12px; color:#9fb39f; text-align:center; margin-top:8px; }
-    @media (max-width:600px) {
-      .row { flex-direction: column; }
-    }
-  </style>
-</head>
+    .actions{ display:flex; gap:12px; justify-content:center; margin-top:6px }
+    button{ padding:10px 16px; border-radius:12px; border:1px solid transparent; cursor:pointer; font-weight:700 }
+    .btn-submit{ background:var(--accent); color:#021; box-shadow:0 6px 18px rgba(126,252,126,.25) }
+    .btn-cancel{ background:transparent; color:var(--accent); border-color:#213243 }
+
+    @media (max-width:720px){ .row{ grid-template-columns:1fr } }
+
+    /* Print: keep it clean */
+    @media print{ body{ background:#fff } .card{ border:1px solid #ccc; box-shadow:none } }
+  </style></head>
 <body>
   <div class="card">
-    <h2> Student Fee 2025-26</h2>
-
-    <div class="row">
-      <div class="col">
-        <label for="scholarNo">Scholar No.</label>
-        <input id="scholarNo" type="text" readonly />
-      </div>
-      <div class="col">
-        <label for="amount">Amount (₹)</label>
-        <input id="amount" type="number" min="0" step="1" placeholder="Enter amount" />
-      </div>
+    <h2>Student Fee (2025‒26)</h2>
+    <p class="hint">Fill details below and submit. Data will be saved to <b>Sheet2</b> via your Apps Script.</p><form id="feeForm">
+  <div class="row">
+    <div>
+      <label for="scholarNo">Scholar Number</label>
+      <input id="scholarNo" name="scholarNo" type="text" placeholder="e.g., 1001" required />
     </div>
-
-    <div class="row">
-      <div class="col">
-        <label for="paymentDate">Payment Date</label>
-        <input id="paymentDate" type="date" />
-      </div>
-      <div class="col">
-        <label for="payerName">Payer Name</label>
-        <input id="payerName" type="text" placeholder="Payer full name" />
-      </div>
+    <div>
+      <label for="amount">Amount (₹)</label>
+      <input id="amount" name="amount" type="number" min="0" step="1" placeholder="Enter amount" required />
     </div>
-
-    <div class="row">
-      <div class="col">
-        <label for="paymentMode">Payment Mode</label>
-        <select id="paymentMode">
-          <option value="">-- Select Mode --</option>
-          <option value="Cash">Cash</option>
-          <option value="Phone Pay">Phone Pay</option>
-          <option value="Bank">Bank</option>
-          <option value="UPI">UPI</option>
-        </select>
-      </div>
-      <div class="col">
-        <label for="receivedBy">Received By</label>
-        <select id="receivedBy">
-          <option value="">-- Select Receiver --</option>
-          <option value="Vandana Sulakhiya">Vandana Sulakhiya</option>
-          <option value="Varsha Sulakhiya">Varsha Sulakhiya</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col" style="flex:1">
-        <label for="remarks">Remarks</label>
-        <textarea id="remarks" placeholder="Optional remarks..."></textarea>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button class="btn-submit" id="submitBtn">Submit Payment</button>
-      <button class="btn-cancel" id="backBtn">Back to List</button>
-    </div>
-
-    <p class="small-muted">Form will send data to database via your web app. </p>
   </div>
 
-  <script>
-    // === Change this if your Apps Script URL is different ===
-    const API_URL = "https://script.google.com/macros/s/AKfycbwGwDiPJ0p-md4s_5c9n3redfBYE03NnG_Vi7G83zmD9bCJHPvJMhMQJ9PMrQa0vW4/exec";
+  <div class="row">
+    <div>
+      <label for="paymentDate">Payment Date</label>
+      <input id="paymentDate" name="paymentDate" type="date" required />
+    </div>
+    <div>
+      <label for="payerName">Payer Name</label>
+      <input id="payerName" name="payerName" type="text" placeholder="Payer full name" required />
+    </div>
+  </div>
 
-    // Helper: get query param
-    function getQueryParam(name) {
+  <div class="row">
+    <div>
+      <label for="paymentMode">Payment Mode</label>
+      <select id="paymentMode" name="paymentMode" required>
+        <option value="">-- Select Mode --</option>
+        <option>UPI</option>
+        <option>Bank</option>
+        <option>Cash</option>
+        <option>PhonePe</option>
+        <option>Google Pay</option>
+        <option>Paytm</option>
+      </select>
+    </div>
+    <div>
+      <label for="receivedBy">Received By</label>
+      <select id="receivedBy" name="receivedBy" required>
+        <option value="">-- Select Receiver --</option>
+        <option>Vandana Sulakhiya</option>
+        <option>Varsha Sulakhiya</option>
+      </select>
+    </div>
+  </div>
+
+  <div>
+    <label for="remarks">Remarks (optional)</label>
+    <textarea id="remarks" name="remarks" placeholder="Any note..."></textarea>
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn-submit">Submit</button>
+    <button type="button" class="btn-cancel" id="resetBtn">Reset</button>
+  </div>
+</form>
+
+  </div>  <script>
+    // === Set your deployed Apps Script Web App URL here ===
+    const API_URL = "https://script.google.com/macros/s/AKfycbzu_QhgDf0X8zTuOir_t55GguGu3qrXp-i6i9ONONztrFmXs5arKyEnZ7DTmBYjRxSL/exec";
+
+    // Prefill scholar from URL (?scholar=...) and set today's date
+    (function init(){
       const url = new URL(window.location.href);
-      return url.searchParams.get(name);
-    }
-
-    // Prefill scholar number (read only)
-    const scholarInput = document.getElementById("scholarNo");
-    const paramScholar = getQueryParam("scholar") || getQueryParam("scholarNo") || "";
-    if (paramScholar) {
-      scholarInput.value = paramScholar;
-    } else {
-      scholarInput.value = "";
-    }
-
-    // Set default date to today
-    const dateInput = document.getElementById("paymentDate");
-    (function setToday(){
+      const pre = url.searchParams.get('scholar') || url.searchParams.get('scholarNo') || '';
+      if(pre) document.getElementById('scholarNo').value = pre;
       const d = new Date();
-      const yyyy = d.getFullYear();
-      let mm = d.getMonth() + 1;
-      let dd = d.getDate();
-      if (mm < 10) mm = '0' + mm;
-      if (dd < 10) dd = '0' + dd;
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      document.getElementById('paymentDate').value = `${d.getFullYear()}-${mm}-${dd}`;
     })();
 
-    // Buttons
-    document.getElementById("backBtn").addEventListener("click", function(){
-      // Return to index with scholar param if exists
-      if (scholarInput.value) {
-        window.location.href = `index.html?scholar=${encodeURIComponent(scholarInput.value)}`;
-      } else {
-        window.location.href = "studentList.html";
-      }
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      document.getElementById('feeForm').reset();
     });
 
-    document.getElementById("submitBtn").addEventListener("click", function(){
-      submitPayment();
-    });
-
-    // Main submit function
-    function submitPayment() {
-      const scholar = scholarInput.value.trim();
-      const amount = document.getElementById("amount").value.trim();
-      const paymentDate = document.getElementById("paymentDate").value;
-      const payerName = document.getElementById("payerName").value.trim();
-      const paymentMode = document.getElementById("paymentMode").value;
-      const receivedBy = document.getElementById("receivedBy").value;
-      const remarks = document.getElementById("remarks").value.trim();
+    document.getElementById('feeForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const scholar = document.getElementById('scholarNo').value.trim();
+      const amount = document.getElementById('amount').value.trim();
+      const paymentDate = document.getElementById('paymentDate').value;
+      const payerName = document.getElementById('payerName').value.trim();
+      const paymentMode = document.getElementById('paymentMode').value;
+      const receivedBy = document.getElementById('receivedBy').value;
+      const remarks = document.getElementById('remarks').value.trim();
 
       // Basic validation
-      if (!scholar) {
-        Swal.fire("Error", "Scholar number missing.", "error");
-        return;
-      }
-      if (!amount || Number(amount) <= 0) {
-        Swal.fire("Error", "Please enter a valid amount.", "error");
-        return;
-      }
-      if (!paymentDate) {
-        Swal.fire("Error", "Please choose payment date.", "error");
-        return;
-      }
-      if (!payerName) {
-        Swal.fire("Error", "Please enter payer name.", "error");
-        return;
-      }
-      if (!paymentMode) {
-        Swal.fire("Error", "Please select payment mode.", "error");
-        return;
-      }
-      if (!receivedBy) {
-        Swal.fire("Error", "Please select who received the payment.", "error");
+      if(!scholar || !amount || Number(amount)<=0 || !paymentDate || !payerName || !paymentMode || !receivedBy){
+        Swal.fire('Missing info', 'Please fill all required fields with valid values.', 'warning');
         return;
       }
 
-      // Confirmation
-      Swal.fire({
-        title: 'Are you sure?',
-        html: `Pay ₹ <b>${amount}</b> for Scholar No: <b>${scholar}</b>`,
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, submit',
-        cancelButtonText: 'Cancel'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Show processing
-          Swal.fire({
-            title: 'Processing',
-            text: 'Sending data to server...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading(); }
-          });
+      const payload = { 
+        scholar: scholar,
+        amount: amount,
+        paymentDate: paymentDate,
+        payerName: payerName,
+        paymentMode: paymentMode,
+        receivedBy: receivedBy,
+        remarks: remarks
+      };
 
-          // Prepare payload required by your Apps Script (action=addTransaction)
-          const payload = {
-            action: "addTransaction",
-            scholar: scholar,
-            amount: amount,
-            paymentDate: paymentDate,
-            payerName: payerName,
-            paymentMode: paymentMode,
-            receivedBy: receivedBy,
-            remarks: remarks
-          };
-
-          // POST JSON
-          fetch(API_URL + "?action=addTransaction", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          })
-          .then(resp => resp.json())
-          .then(res => {
-            // If Apps Script returns text (rare) handle gracefully
-            let data = res;
-            if (typeof res === "string") {
-              try { data = JSON.parse(res); } catch(e) { data = { status: "unknown", message: res }; }
-            }
-
-            Swal.close();
-            if (data && data.status === "ok") {
-              Swal.fire({
-                title: "Success",
-                html: `Payment recorded successfully.<br><b>Amount:</b> ₹${amount}<br><b>Scholar:</b> ${scholar}`,
-                icon: "success"
-              }).then(() => {
-                // Optionally redirect to index with scholar param to view updated transactions
-                window.location.href = `studentList.html`;
-              });
-            } else {
-              const msg = (data && (data.message || JSON.stringify(data))) || "Unknown server response";
-              Swal.fire("Error", "Failed to save payment: " + msg, "error");
-            }
-          })
-          .catch(err => {
-            Swal.close();
-            console.error(err);
-            Swal.fire("Error", "Network or server error. See console for details.", "error");
-          });
-        } // end if confirmed
+      // Confirm
+      const ok = await Swal.fire({
+        title: 'Confirm payment?',
+        html: `Scholar: <b>${scholar}</b><br>Amount: <b>₹${amount}</b>`,
+        icon: 'question', showCancelButton:true, confirmButtonText:'Submit'
       });
-    }
-  </script>
-</body>
+      if(!ok.isConfirmed) return;
+
+      // Sending
+      Swal.fire({ title:'Submitting...', text:'Please wait', allowOutsideClick:false, didOpen:()=>Swal.showLoading() });
+
+      try{
+        // NOTE: If you face CORS on GitHub Pages, switch to the no-cors block below.
+        const res = await fetch(API_URL, {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        // If Apps Script returns JSON
+        let data;
+        try{ data = await res.json(); } catch{ data = { status: res.ok ? 'ok' : 'error' }; }
+
+        Swal.close();
+        if(data.status === 'ok'){
+          Swal.fire('Success', 'Saved successfully.', 'success');
+          document.getElementById('feeForm').reset();
+        }else{
+          Swal.fire('Error', (data && data.message) || 'Server error', 'error');
+        }
+      }catch(err){
+        // === Fallback for strict CORS ===
+        try{
+          await fetch(API_URL, {
+            method:'POST',
+            mode:'no-cors', // opaque response but will save on server
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify(payload)
+          });
+          Swal.close();
+          Swal.fire('Submitted', 'Saved (no-cors mode). Please verify in sheet.', 'success');
+          document.getElementById('feeForm').reset();
+        }catch(e){
+          Swal.close();
+          console.error(err);
+          Swal.fire('Network or CORS error', 'Please check Web App deployment & permissions.', 'error');
+        }
+      }
+    });
+  </script></body>
 </html>
 
-<!----- code gs  jaha se scholar a rha hai bahi baka web url lagega --->
+<!----- code gs  jaha se scholar a rha hai bahi baka web url lagega 
+
+google drive ke folder me Appacript file bnaa ke baha ye code ko depliy karke is code me link karna hota hai
+
+
+function doPost(e) {
+  try {
+    // === Parse JSON body ===
+    var data = JSON.parse(e.postData.contents);
+
+    // === Open target Sheet by ID and get Sheet2 ===
+    var sheet = SpreadsheetApp.openById("1T0WVNXsb4CW58CeGjR_Ce_r_8L4zAE1IW3JaCh9gM1E")
+                              .getSheetByName("Sheet2");
+
+    // === Append row in correct column order ===
+    sheet.appendRow([
+      data.scholar,       // A → Scholar No
+      data.amount,        // B → Amount
+      data.paymentDate,   // C → Payment Date
+      data.payerName,     // D → Payer Name
+      data.paymentMode,   // E → Payment Mode
+      data.receivedBy,    // F → Received By
+      data.remarks        // G → Remarks
+    ]);
+
+    // === Success Response ===
+    return ContentService.createTextOutput(
+      JSON.stringify({ status: "ok", message: "Saved successfully" })
+    ).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    // === Error Handling ===
+    return ContentService.createTextOutput(
+      JSON.stringify({ status: "error", message: err.message })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+--->
