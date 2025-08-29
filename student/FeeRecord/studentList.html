@@ -466,37 +466,67 @@
 
 <script>
    const scriptURL = "https://script.google.com/macros/s/AKfycbz_JhBI96lV7KkWJ570VXwylbTvPWSy3lvd4g_jU7bFexq9-0iBX603-7NSsbcjZphg/exec"; 
+   const CACHE_KEY = "studentDataCache_v1";
 
-   // Page load hone pe spinner
-   Swal.fire({
-     title: 'Loading...',
-     text: 'Fetching student data',
-     allowOutsideClick: false,
-     didOpen: () => {
-       Swal.showLoading();
-     }
-   });
+   // Page Load Function
+   async function loadStudents() {
+     const cached = localStorage.getItem(CACHE_KEY);
 
-   fetch(scriptURL)
-     .then(res => res.json())
-     .then(data => {
-       Swal.close(); 
+     if (cached) {
+       // Agar cache hai to seedha dikhado (spinner nahi)
+       const data = JSON.parse(cached);
        renderTable(data);
 
-       // Search input listener
-       document.getElementById("searchInput").addEventListener("input", () => filterTable(data));
-     })
-     .catch(err => {
-       Swal.fire("Error", "Failed to load student data", "error");
-     });
+       // Background me fresh data fetch
+       fetchFreshData();
+     } else {
+       // Pehli baar → spinner dikhao
+       Swal.fire({
+         title: 'Loading...',
+         text: 'Fetching student data',
+         allowOutsideClick: false,
+         didOpen: () => {
+           Swal.showLoading();
+         }
+       });
 
+       fetchFreshData(true);
+     }
+   }
+
+   // Fresh data fetch function
+   async function fetchFreshData(showSpinnerClose = false) {
+     try {
+       const res = await fetch(scriptURL);
+       const data = await res.json();
+
+       renderTable(data);
+       localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+
+       if (showSpinnerClose) Swal.close();
+
+       // Search input listener ko ek hi baar attach karna hai
+       if (!document.getElementById("searchInput").dataset.listenerAdded) {
+         document.getElementById("searchInput").addEventListener("input", () => filterTable(data));
+         document.getElementById("searchInput").dataset.listenerAdded = "true";
+       }
+     } catch (err) {
+       console.error("Fetch error:", err);
+       if (showSpinnerClose) {
+         Swal.close();
+         Swal.fire("Error", "Failed to load student data", "error");
+       }
+     }
+   }
+
+   // Render Table
    function renderTable(data) {
      const tbody = document.querySelector("#studentTable tbody");
      tbody.innerHTML = "";
      data.forEach(student => {
        const tr = document.createElement("tr");
        tr.innerHTML = `
-         <td><img src="${student.photoURL}" alt="Photo"></td>
+         <td><img src="${student.photoURL}" alt="Photo" width="50"></td>
          <td>${student.scholarNo}</td>
          <td>${student.name}</td>
          <td>${student.father}</td>
@@ -508,6 +538,7 @@
      });
    }
 
+   // Filter/Search
    function filterTable(data) {
      const query = document.getElementById("searchInput").value.toLowerCase();
      const rows = document.querySelectorAll("#studentTable tbody tr");
@@ -532,11 +563,14 @@
      });
    }
 
-   // View button -> scholarNo ko index.html me bhejna
+   // View button
    function viewStudent(scholarNo) {
      window.location.href = `index.html?scholarNo=${scholarNo}`;
    }
- </script>
+
+   // Call main function
+   loadStudents();
+</script>
 
 
     <!-- Jquery Core Js -->
@@ -613,4 +647,3 @@ function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify(jsonData))
     .setMimeType(ContentService.MimeType.JSON);
 }
-
