@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile - Trollify</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 80px 20px 100px;
+      box-sizing: border-box;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #ffd700;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      color: #ddd;
+      z-index: 1000;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    footer strong {
+      color: #00ffcc;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      width: 340px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #fff;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      margin: 10px 0;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .info {
+      text-align: left;
+      margin: 15px 0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .info strong {
+      color: #ffd700;
+    }
+
+    /* Stylish clickable call button */
+    .phone {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 12px;
+      border: 2px solid #00ffcc;
+      cursor: pointer;
+      animation: borderColorChange 3s linear infinite;
+      background: rgba(255, 255, 255, 0.05);
+      transition: transform 0.2s, background 0.2s;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .phone:hover {
+      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .phone span {
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .phone i {
+      font-size: 18px;
+      color: #00ffcc;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .phone:hover i {
+      transform: scale(1.5) rotate(10deg);
+      color: #ffd700;
+    }
+
+    /* Animation for border color change */
+    @keyframes borderColorChange {
+      0% { border-color: #00ffcc; }
+      25% { border-color: #ff00ff; }
+      50% { border-color: #ffd700; }
+      75% { border-color: #00ffff; }
+      100% { border-color: #00ffcc; }
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    Trollify
+  </header>
+
+  <div class="card">
+    <img src="https://i.ibb.co/ZRhYkScQ/Gemini-Generated-Image-o5xc9oo5xc9oo5xc.png" alt="Student Photo" class="photo">
+    <h2>Prem Janghela</h2>
+    <div class="info">
+      <p><strong>Class:</strong> 8th</p>
+      <p><strong>Father:</strong> [Father's Name]</p>
+      <p><strong>Gender:</strong> Male</p>
+      <p><strong>Address:</strong> Bob</p>
+    </div>
+
+    <!-- Whole button clickable -->
+    <a href="tel:9752776923" class="phone">
+      <span>9752776923</span>
+      <i class="fas fa-phone"></i>
+    </a>
+    <a href="tel:9754113218" class="phone">
+      <span>9754113218</span>
+      <i class="fas fa-phone"></i>
+    </a>
+  </div>
+
+  <footer>
+    <strong>Powered by Prem Janghela</strong> | 📞 9752776926, 8223963014, 9754113218 | ✉️ trollifyindustry@gmail.com
+  </footer>
+</body>
+</html>
