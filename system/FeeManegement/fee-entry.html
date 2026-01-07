@@ -151,6 +151,43 @@ if(qsClass){
 </body>
 </html>
 
+<!-----------------------------
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp
+      .openById("15C6PwONDpl_oKAdiYLF_hqwaSZs-0_gW-0xoN-PRJjY")
+      .getSheetByName("FeeTransactions");
 
+    const data = JSON.parse(e.postData.contents);
+
+    sheet.appendRow([
+      data.date,
+      data.scholar,
+      data.session,
+      data.className,
+      data.amount,
+      data.paymentMode,
+      data.payerName,
+      data.receiver,
+      data.remark,
+      new Date()
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        status: "success",
+        message: "Fee transaction saved successfully"
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({
+        status: "error",
+        message: error.toString()
+      }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
 
