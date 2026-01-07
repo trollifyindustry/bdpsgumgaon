@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fee Transaction Entry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0f172a;
+  color:#fff;
+  padding:20px;
+}
+form{
+  max-width:420px;
+  margin:auto;
+  background:#020617;
+  padding:20px;
+  border-radius:10px;
+}
+input,select,textarea,button{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+}
+button{
+  background:#22c55e;
+  color:#000;
+  font-weight:bold;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<form id="feeForm">
+  <h2>Fee Transaction</h2>
+
+  <input type="date" id="date" required>
+  
+  <input type="text" id="scholar" placeholder="Enter Scholar No..." readonly="readonly"  required>
+  <input type="text" id="session" placeholder="Session"  readonly="readonly" >
+  <input type="text" id="className" placeholder="Session"  readonly="readonly" > 
+
+  <input type="number" id="amount" placeholder="Amount" required>
+
+  <select id="paymentMode" required>
+    <option value="">Payment Mode</option>
+    <option>Cash</option>
+    <option>Online</option>
+  </select>
+
+  <input type="text" id="payerName" placeholder="Payer Name" required>
+
+  <select id="receiver" required>
+    <option value="">Receiver</option>
+    <option>Varsha Sulakhiya</option>
+    <option>Vandana Sulakhiya</option>
+  </select>
+
+  <textarea id="remark" placeholder="Remark"></textarea>
+
+  <button type="submit">Save Transaction</button>
+</form>
+
+<script>
+document.getElementById("date").valueAsDate = new Date();
+
+const scriptURL = "https://script.google.com/macros/s/AKfycbwCmLB8gOuIL90j2EWqShiylXCj0X5i8r8HvZJFw-Y7lgMwSR9NoW5q4dxmzka8sE6kRw/exec";
+
+document.getElementById("feeForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  Swal.fire({
+    title:"Saving...",
+    allowOutsideClick:false,
+    didOpen:()=>Swal.showLoading()
+  });
+
+  const data = {
+    date: date.value,
+    scholar: scholar.value,
+    session: session.value,
+    className: className.value,
+    amount: amount.value,
+    paymentMode: paymentMode.value,
+    payerName: payerName.value,
+    receiver: receiver.value,
+    remark: remark.value
+  };
+
+  fetch(scriptURL,{
+    method:"POST",
+    body:JSON.stringify(data)
+  })
+  .then(res=>res.json())
+  .then(result=>{
+    
+    if(result.status==="success"){
+       Swal.fire({
+       icon: "success",
+       title: "Transaction Saved",
+       showConfirmButton: false,
+       timer: 1200
+     }).then(() => {
+    // Redirect to studentProfile.html with scholar param
+       window.location.href = `studentList.html`;
+      });
+    
+    // Reset form (optional)
+       document.getElementById("feeForm").reset();
+       date.valueAsDate = new Date();
+    } 
+    
+    else{
+      Swal.fire("Error",result.message,"error");
+    }
+  })
+  .catch(()=>{
+    Swal.fire("Server Error","Contact Developer","error");
+  });
+});
+</script>
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const qsScholar = params.get("scholar");
+const qsSession = params.get("session");
+const qsClass = params.get("class");
+
+if(qsScholar){
+  document.getElementById("scholar").value = qsScholar;
+  document.getElementById("scholar").readOnly = true;
+}
+
+if(qsSession){
+  document.getElementById("session").value = qsSession;
+}
+
+if(qsClass){
+  document.getElementById("className").value = qsClass;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
