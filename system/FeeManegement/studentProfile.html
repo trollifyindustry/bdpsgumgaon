@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Fee Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f4f7;
+  padding:20px;
+}
+h2,h3{margin-top:0}
+input,button{
+  padding:8px;
+  font-size:14px;
+}
+button{
+  cursor:pointer;
+  background:#007bff;
+  color:#fff;
+  border:none;
+}
+.card{
+  background:#fff;
+  padding:15px;
+  margin-top:20px;
+  border-radius:6px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th,td{
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:center;
+}
+th{
+  background:#333;
+  color:#fff;
+}
+.paid{color:green;font-weight:bold}
+.pending{color:red;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h2>Student Fee Management System</h2>
+
+Scholar Number:
+<input id="scholar" placeholder="Enter Scholar No">
+<button onclick="loadStudent()">Search</button>
+
+<div id="result"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzpVXYeBXOoPjU_7L-r_38tQ6yueN6OECWhZXAnDsfYcDHWb31gbcjdSqW_bBMCs9xZOg/exec";
+
+function loadStudent(){
+  const scholar = document.getElementById("scholar").value.trim();
+  if(!scholar){
+    Swal.fire("Required", "Please enter Scholar Number", "warning");
+    return;
+  }
+
+  // 🔄 Loading
+  Swal.fire({
+    title: "Loading...",
+    text: "Profile Loading....",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  fetch(API_URL + "?scholar=" + scholar)
+  .then(res => res.json())
+  .then(data => {
+
+    Swal.close();
+
+    if(!data.student){
+      document.getElementById("result").innerHTML = "";
+      Swal.fire("Not Found", "No student found for this Scholar Number", "error");
+      return;
+    }
+
+    // ✅ Success
+    Swal.fire({
+      icon: "success",
+      title: "Data Loaded",
+      timer: 1200,
+      showConfirmButton: false
+    });
+
+    let html = `
+   <!-- Student Information card ke andar ye button add karo -->
+   <div class="card">
+   <h3>Student Information</h3>
+   <b>Scholar No:</b> ${data.student.scholar}<br>
+   <b>Name:</b> ${data.student.name}<br>
+   <b>Father:</b> ${data.student.father}<br>
+   <b>Mother:</b> ${data.student.mother}<br>
+   <b>Phone:</b> ${data.student.phone}<br><br>
+   </div>
+
+    <div class="card">
+      <h3>Session Wise Fee Status</h3>
+      <table>
+        <tr>
+          <th>Session</th>
+          <th>Class</th>
+          <th>Total Fee</th>
+          <th>Paid</th>
+          <th>Pending</th>
+          <th>Remark</th>
+          <th>Action</th>
+        </tr>`;
+
+    data.summary.forEach(s=>{
+    html += `
+    <tr>
+    <td>${s.session}</td>
+    <td>${s.class}</td>
+    <td>₹${s.total}</td>
+    <td class="paid">₹${s.paid}</td>
+    <td class="pending">₹${s.pending}</td>
+    <td>${s.remark}</td>
+    <td>
+    <button onclick="payFeeWithSession(
+    '${data.student.scholar}',
+    '${s.session}',
+    '${s.class}'
+    )">
+    💰 Pay Fee
+    </button>
+    </td>
+    </tr>`;
+    });
+
+    html += `
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>Fee Transaction History</h3>
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Session</th>
+          <th>Class</th>
+          <th>Amount</th>
+          <th>Mode</th>
+          <th>Payer</th>
+          <th>Receiver</th>
+          <th>Remark</th>
+        </tr>`;
+
+    if(data.transactions.length === 0){
+      html += `<tr><td colspan="7">No transactions found</td></tr>`;
+    } else {
+      data.transactions.slice().reverse().forEach(t=>{
+        html += `
+      <tr>
+      <td>${formatDate(t.date)}</td>
+      <td>${t.session}</td>
+      <td>${t.class}</td>
+      <td>₹${t.amount}</td>
+      <td>${t.paymentMode}</td>
+      <td>${t.payer}</td>
+      <td>${t.receiver}</td>
+      <td>${t.remark}</td>
+      </tr>`;
+          });
+    
+    }
+
+    html += `
+      </table>
+    </div>`;
+
+    document.getElementById("result").innerHTML = html;
+
+  })
+  .catch(err=>{
+    console.error(err);
+    Swal.fire("Error", "Server error or network issue", "error");
+  });
+}
+
+// Date formate script
+  function formatDate(dateStr){
+  if(!dateStr) return "";
+  const d = new Date(dateStr);
+  const day = String(d.getDate()).padStart(2,'0');
+  const month = String(d.getMonth()+1).padStart(2,'0');
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
+  }
+  
+  
+  function payFeeWithSession(scholar, session, className){
+  window.open(
+  `fee-entry.html?scholar=${encodeURIComponent(scholar)}&session=${encodeURIComponent(session)}&class=${encodeURIComponent(className)}`,
+  "_blank"
+  );
+  }
+</script> 
+<script>
+const params = new URLSearchParams(window.location.search);
+const scholar = params.get("scholar");
+
+if(scholar){
+  document.getElementById("scholar").value = scholar;
+}
+</script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+  const scholar = params.get("scholar");
+
+  if(scholar){
+    const input = document.getElementById("scholar");
+    input.value = scholar;
+
+    // 🔥 auto search
+    loadStudent();
+  }
+});
+</script>
+
+
+</body>
+</html>
