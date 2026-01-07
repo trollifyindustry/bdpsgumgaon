@@ -238,5 +238,87 @@ window.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
+
+  <!--------------------------------------
+
+  
+function doGet(e) {
+  var scholar = e.parameter.scholar;
+  var ss = SpreadsheetApp.getActive();
+
+  var studentSheet = ss.getSheetByName("Students").getDataRange().getValues();
+  var sessionSheet = ss.getSheetByName("StudentSessions").getDataRange().getValues();
+  var txnSheet = ss.getSheetByName("FeeTransactions").getDataRange().getValues();
+
+  var student = null;
+  var summary = [];
+  var transactions = [];
+
+  // STUDENT MASTER
+  for (var i = 1; i < studentSheet.length; i++) {
+    if (studentSheet[i][0] == scholar) {
+      student = {
+        scholar: studentSheet[i][0],
+        name: studentSheet[i][1],
+        father: studentSheet[i][2],
+        mother: studentSheet[i][3],
+        phone: studentSheet[i][4]
+      };
+      break;
+    }
+  }
+
+  // SESSION WISE SUMMARY
+  for (var j = 1; j < sessionSheet.length; j++) {
+    if (sessionSheet[j][0] == scholar) {
+      var total = Number(sessionSheet[j][3]);
+      var paid = 0;
+
+      for (var k = 1; k < txnSheet.length; k++) {
+        if (txnSheet[k][1] == scholar && txnSheet[k][2] == sessionSheet[j][1]) {
+          paid += Number(txnSheet[k][4]);
+        }
+      }
+
+      summary.push({
+        session: sessionSheet[j][1],
+        class: sessionSheet[j][2],
+        total: total,
+        paid: paid,
+        pending: total - paid,
+        remark: (total - paid) === 0 ? "Full Paid" : "Pending"
+      });
+    }
+  }
+
+  // TRANSACTION HISTORY
+  for (var t = 1; t < txnSheet.length; t++) {
+    if (txnSheet[t][1] == scholar) {
+      transactions.push({
+        date: txnSheet[t][0],
+        session: txnSheet[t][2],
+        class: txnSheet[t][3],
+        amount: txnSheet[t][4],
+        paymentMode: txnSheet[t][5],
+        payer: txnSheet[t][6],
+        receiver: txnSheet[t][7],
+        remark: txnSheet[t][8]
+      });
+    }
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({
+    student: student,
+    summary: summary,
+    transactions: transactions
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+
+
+
+
+
+
 </body>
 </html>
