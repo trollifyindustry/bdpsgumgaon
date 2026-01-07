@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>All Fee Transactions</title>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:15px}
+h2{text-align:center}
+
+.top-bar{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+  flex-wrap:wrap
+}
+
+input,button{
+  padding:7px;font-size:14px
+}
+button{
+  background:#2563eb;
+  color:#fff;
+  border:none;
+  cursor:pointer
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff
+}
+th,td{
+  border:1px solid #ccc;
+  padding:7px;
+  text-align:center
+}
+th{
+  background:#333;
+  color:#fff
+}
+.pending{color:red;font-weight:bold}
+.paid{color:green;font-weight:bold}
+
+@media print{
+  .top-bar{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<h2>All Fee Transactions</h2>
+
+<div class="top-bar">
+  <input type="text" id="searchBox"
+   placeholder="Search Name / Scholar / Father / Amount / Mode / Receiver">
+  <button onclick="window.print()">Print</button>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Scholar</th>
+<th>Name</th>
+<th>Father</th>
+<th>Date</th>
+<th>Session</th>
+<th>Class</th>
+<th>Total Fee</th>
+<th>Paid</th>
+<th>Pending</th>
+<th>Mode</th>
+<th>Received By</th>
+<th>Remark</th>
+</tr>
+</thead>
+<tbody id="txnTable"></tbody>
+</table>
+
+<script>
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxqTtMt2cfPHdd78SZQ1_M1u-lfUUbtctukSbXpt85sOGNOHWxBBw6p2WhWd7QPURZjpQ/exec";
+
+let allData=[];
+
+// 🔄 LOADING
+Swal.fire({
+  title:"Loading Transactions...",
+  allowOutsideClick:false,
+  didOpen:()=>Swal.showLoading()
+});
+
+fetch(API_URL)
+.then(r=>r.json())
+.then(data=>{
+  allData=data;
+  render(data);
+  Swal.close();
+})
+.catch(()=>{
+  Swal.fire("Error","Data load failed","error");
+});
+
+function render(data){
+  let html="";
+  data.forEach(d=>{
+    html+=`
+    <tr>
+      <td>${d.scholar}</td>
+      <td>${d.name}</td>
+      <td>${d.father}</td>
+      <td>${formatDate(d.date)}</td>
+      <td>${d.session}</td>
+      <td>${d.class}</td>
+      <td>₹${d.total}</td>
+      <td class="paid">₹${d.paid}</td>
+      <td class="pending">₹${d.pending}</td>
+      <td>${d.mode}</td>
+      <td>${d.receiver}</td>
+      <td>${d.remark||""}</td>
+    </tr>`;
+  });
+  txnTable.innerHTML=html;
+}
+
+// 🔍 SEARCH
+searchBox.addEventListener("input",()=>{
+  const q = searchBox.value.toLowerCase();
+  const f = allData.filter(d=>
+    (d.scholar+d.name+d.father+d.paid+d.mode+d.receiver)
+    .toLowerCase().includes(q)
+  );
+  render(f);
+});
+
+// 📅 DATE FORMAT
+function formatDate(d){
+  const dt = new Date(d);
+  return `${String(dt.getDate()).padStart(2,'0')}/
+          ${String(dt.getMonth()+1).padStart(2,'0')}/
+          ${dt.getFullYear()}`;
+}
+</script>
+
+</body>
+</html>
+
+
+<!-------
+
+function doGet() {
+
+  const ss = SpreadsheetApp.getActive();
+
+  const students = ss.getSheetByName("Students").getDataRange().getValues();
+  const sessions = ss.getSheetByName("StudentSessions").getDataRange().getValues();
+  const txns = ss.getSheetByName("FeeTransactions").getDataRange().getValues();
+
+  // ================= MAP STUDENTS =================
+  let studentMap = {};
+  for(let i=1;i<students.length;i++){
+    let [scholar,name,father,phone] = students[i];
+    studentMap[scholar] = {name,father,phone};
+  }
+
+  // ================= MAP TOTAL FEE =================
+  let totalFeeMap = {};
+  for(let i=1;i<sessions.length;i++){
+    let [scholar,session,cls,total] = sessions[i];
+    totalFeeMap[`${scholar}_${session}_${cls}`] = Number(total);
+  }
+
+  // ================= PROCESS TRANSACTIONS =================
+  let paidTillNow = {};
+  let result = [];
+
+  for(let i=1;i<txns.length;i++){
+    let [date,scholar,session,cls,amount,mode,payer,receiver,remark] = txns[i];
+
+    let key = `${scholar}_${session}_${cls}`;
+    paidTillNow[key] = (paidTillNow[key] || 0) + Number(amount);
+
+    let totalFee = totalFeeMap[key] || 0;
+    let pending = totalFee - paidTillNow[key];
+
+    let s = studentMap[scholar] || {};
+
+    result.push({
+      scholar,
+      name: s.name || "",
+      father: s.father || "",
+      date,
+      session,
+      class: cls,
+      total: totalFee,
+      paid: Number(amount),
+      pending,
+      mode,
+      receiver,
+      remark
+    });
+  }
+
+  // 🔥 NEWEST FIRST
+  result.reverse();
+
+  return ContentService
+    .createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
