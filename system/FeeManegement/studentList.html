@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Students List</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:8px;text-align:center}
+th{background:#333;color:#fff}
+button{padding:6px 10px;background:#2563eb;color:#fff;border:none;cursor:pointer}
+</style>
+</head>
+
+<body>
+
+<h2>Students List</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Scholar</th>
+  <th>Name</th>
+  <th>Father</th>
+  <th>Phone</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody id="studentTable"></tbody>
+</table>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbzgyLACmJ7KnW53hELzx76lptcVmJOxM7Xey3FBxJyvviHPWkmDBMpU0hNXDRZGbvFGMQ/exec";
+const STORAGE_KEY = "studentsData";
+
+// ================= TABLE RENDER =================
+function renderTable(data){
+  let html = "";
+  data.forEach(s => {
+    html += `
+      <tr>
+        <td>${s.scholar}</td>
+        <td>${s.name}</td>
+        <td>${s.father}</td>
+        <td>${s.phone}</td>
+        <td>
+          <button onclick="openProfile('${s.scholar}')">
+            View Profile
+          </button>
+        </td>
+      </tr>`;
+  });
+  document.getElementById("studentTable").innerHTML = html;
+}
+
+// ================= LOAD FROM LOCAL STORAGE =================
+const localData = localStorage.getItem(STORAGE_KEY);
+if(localData){
+  renderTable(JSON.parse(localData));
+}
+
+// ================= SILENT BACKGROUND FETCH =================
+async function syncStudents(){
+  try{
+    const res = await fetch(API_URL);
+    const data = await res.json();
+
+    const oldData = localStorage.getItem(STORAGE_KEY);
+
+    if(!oldData || JSON.stringify(data) !== oldData){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      renderTable(data); // auto update UI
+    }
+  }catch(e){
+    // silent error (no UI disturbance)
+    console.log("Background sync failed");
+  }
+}
+
+// ================= PROFILE OPEN =================
+function openProfile(scholar){
+  window.location.href =
+    "studentProfile.html?scholar=" + encodeURIComponent(scholar);
+}
+
+// ================= INITIAL BACKGROUND SYNC =================
+syncStudents();
+
+// ================= AUTO BACKGROUND REFRESH =================
+setInterval(syncStudents, 30000); // every 30 sec
+</script>
+
+</body>
+</html>
