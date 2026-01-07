@@ -94,3 +94,20 @@ setInterval(syncStudents, 30000); // every 30 sec
 
 </body>
 </html>
+<!---------------------------
+function doGet() {
+  const sh = SpreadsheetApp.getActive().getSheetByName("Students");
+  const data = sh.getDataRange().getValues();
+  data.shift(); // header remove
+
+  const students = data.map(r => ({
+    scholar: r[0],
+    name: r[1],
+    father: r[2],
+    phone: r[3]
+  }));
+
+  return ContentService
+    .createTextOutput(JSON.stringify(students))
+    .setMimeType(ContentService.MimeType.JSON);
+}
