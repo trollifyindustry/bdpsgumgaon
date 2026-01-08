@@ -4,48 +4,32 @@
 <meta charset="UTF-8">
 <title>Student Fee Management</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/themes/all-themes.css" rel="stylesheet" />
+</head>
 
 <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f2f4f7;
-  padding:20px;
-}
-h2,h3{margin-top:0}
-input,button{
-  padding:8px;
-  font-size:14px;
-}
-button{
-  cursor:pointer;
-  background:#007bff;
-  color:#fff;
-  border:none;
-}
-.card{
-  background:#fff;
-  padding:15px;
-  margin-top:20px;
-  border-radius:6px;
-  box-shadow:0 2px 6px rgba(0,0,0,0.1);
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-}
-th,td{
-  border:1px solid #ccc;
-  padding:8px;
-  text-align:center;
-}
-th{
-  background:#333;
-  color:#fff;
-}
 .paid{color:green;font-weight:bold}
 .pending{color:red;font-weight:bold}
 </style>
@@ -53,16 +37,19 @@ th{
 
 <body>
 
-<h2>Student Fee Management System</h2>
+<br>
+             <div class="form-group">
+                  <div class="form-line">
+                      <input type="text" id="scholar" class="form-control" placeholder="Enter your scholar...">
+                  </div>
+                     <button onclick="loadStudent()" class="" >Search</button>
+              </div>
 
-Scholar Number:
-<input id="scholar" placeholder="Enter Scholar No">
-<button onclick="loadStudent()">Search</button>
-
+     
 <div id="result"></div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycby2SF_Iac0kmIPis8ytqRupvetbsfzOBw79tomuT1PQIx-asqjmXKlL0MiutrzAOXPDvw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzSogg5jUikCJFRZQwpYGZHTU4zyV1LzCmR_6ozo4rg-ADuO7FkPtIypMpapw0C3hEDdg/exec";
 
 function loadStudent(){
   const scholar = document.getElementById("scholar").value.trim();
@@ -97,24 +84,101 @@ function loadStudent(){
     Swal.fire({
       icon: "success",
       title: "Data Loaded",
-      timer: 1200,
+      timer: 500,
       showConfirmButton: false
     });
 
     let html = `
    <!-- Student Information card ke andar ye button add karo -->
-   <div class="card">
-   <h3>Student Information</h3>
-   <b>Scholar No:</b> ${data.student.scholar}<br>
-   <b>Name:</b> ${data.student.name}<br>
-   <b>Father:</b> ${data.student.father}<br>
-   <b>Mother:</b> ${data.student.mother}<br>
-   <b>Phone:</b> ${data.student.phone}<br><br>
-   </div>
+   
+   
+       <section class="contnt">
+   <div class="rowclearfix">
+       <div class="col-xs-12 col-sm-3">
+   
+<div class="card profile-card">
+                      <div class="profile-header">&nbsp;</div>
+                      <div class="profile-body">
+                          <div class="image-area">
+                              <a href="#" ><img style="width:35%" src="https://i.postimg.cc/HLXrWBP0/5850276.png" alt="Trollify Industry" /></a>
+                          </div>
+                          <div class="content-area">
+      
+                           <h3>Student Information</h3>
+                            <p>Profile</p>
+                           
+                             </div>
+                             
+                      </div>
+                      <div class="profile-footer">
+                          <ul>
+                              <li>
+                                  <span>Scholar No:</span>
+                                  <span> ${data.student.scholar}</span>
+                              </li>
+   
+                              
+                              <li>
+                              <span>Name:</span>
+                              <span> ${data.student.name}</span>
+                              </li>
+                              
+                                  <li>
+                                  <span>Father:</span>
+                                  <span> ${data.student.father}</span>
+                                  </li>
+                                  
+                                  <li>
+                                  <span>Mother:</span>
+                                  <span> ${data.student.mother}</span>
+                                  </li>
+                                  
+                                  <li>
+                                  <span>Phone:</span>
+                                  <span> ${data.student.phone}</span>
+                                  </li>
+                                  
 
-    <div class="card">
-      <h3>Session Wise Fee Status</h3>
-      <table>
+                          
+              
+                      </div>
+                  </div>
+   
+   
+   
+   
+   
+   
+   
+   
+   
+
+<div class="row clearfix">
+     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+             <div class="header">
+                 <h2>
+                       Session Wise Fee Status
+                    <small>This section displays session-wise fee details, highlighting total fees, paid amounts, and pending balances for clear tracking.</small>
+                 </h2>
+                 <ul class="header-dropdown m-r--5">
+                     <li class="dropdown">
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                             <i class="material-icons">more_vert</i>
+                         </a>
+                         <ul class="dropdown-menu pull-right">
+                             <li><a href="javascript:void(0);">Action</a></li>
+                             <li><a href="javascript:void(0);">Another action</a></li>
+                             <li><a href="javascript:void(0);">Something else here</a></li>
+                         </ul>
+                     </li>
+                 </ul>
+             </div>
+             <div class="body table-responsive">
+                 <table class="table table-striped table-bordered">
+                 
+        
+<thead>
         <tr>
           <th>Session</th>
           <th>Class</th>
@@ -123,10 +187,13 @@ function loadStudent(){
           <th>Pending</th>
           <th>Remark</th>
           <th>Action</th>
-        </tr>`;
+        </tr>
+</thead>
+        `;
 
     data.summary.forEach(s=>{
     html += `
+<tbody> 
     <tr>
     <td>${s.session}</td>
     <td>${s.class}</td>
@@ -140,35 +207,74 @@ function loadStudent(){
     '${s.session}',
     '${s.class}'
     )">
-    💰 Pay Fee
+    Pay Fee
     </button>
     </td>
-    </tr>`;
+    </tr>
+<tbody> 
+ `;
     });
 
     html += `
-      </table>
-    </div>
+                           </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
 
-    <div class="card">
-      <h3>Fee Transaction History</h3>
-      <table>
-        <tr>
-          <th>Date</th>
-          <th>Session</th>
-          <th>Class</th>
-          <th>Amount</th>
-          <th>Mode</th>
-          <th>Payer</th>
-          <th>Receiver</th>
-          <th>Remark</th>
-        </tr>`;
+<div class="row clearfix">
+     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+         <div class="card">
+             <div class="header">
+                 <h2>
+                     Fee Transaction History
+                     <small>This table shows complete fee payment records with dates, modes, receivers, and remaining balance after each transaction.</small>
+                 </h2>
+                 <ul class="header-dropdown m-r--5">
+                     <li class="dropdown">
+                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                             <i class="material-icons">more_vert</i>
+                         </a>
+                         <ul class="dropdown-menu pull-right">
+                             <li><a href="javascript:void(0);">Action</a></li>
+                             <li><a href="javascript:void(0);">Another action</a></li>
+                             <li><a href="javascript:void(0);">Something else here</a></li>
+                         </ul>
+                     </li>
+                 </ul>
+             </div>
+             <div class="body table-responsive">
+                 <table class="table table-striped table-bordered">
+                 
+        
+<thead>
+ <tr>
+   <th>Date</th>
+   <th>Session</th>
+   <th>Class</th>
+   <th>Amount</th>
+   <th>Mode</th>
+   <th>Payer</th>
+   <th>Receiver</th>
+   <th>Remark</th>
+ </tr>
+</thead>
+        
+        
+        
+        `;
 
     if(data.transactions.length === 0){
       html += `<tr><td colspan="7">No transactions found</td></tr>`;
     } else {
       data.transactions.slice().reverse().forEach(t=>{
         html += `
+      
+      
+     <tbody> 
       <tr>
       <td>${formatDate(t.date)}</td>
       <td>${t.session}</td>
@@ -178,14 +284,34 @@ function loadStudent(){
       <td>${t.payer}</td>
       <td>${t.receiver}</td>
       <td>${t.remark}</td>
-      </tr>`;
+      </tr>
+    </tbody>
+ 
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      `;
           });
     
     }
 
     html += `
-      </table>
-    </div>`;
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </section>
+      `;
 
     document.getElementById("result").innerHTML = html;
 
@@ -317,8 +443,32 @@ function doGet(e) {
 
 
 
+------->
 
 
+
+    <!-- Jquery Core Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.js"></script>
+
+    <!-- Custom Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/js/admin.js"></script>
+    <script src="https://trollifyindustry.github.io/premjanghela/js/pages/examples/profile.js"></script>
+
+    <!-- Demo Js -->
+    <script src="https://trollifyindustry.github.io/premjanghela/js/demo.js"></script>
 
 </body>
 </html>
+
