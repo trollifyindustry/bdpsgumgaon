@@ -4,75 +4,157 @@
 <meta charset="UTF-8">
 <title>Fee Transaction Entry</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap Core Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
-<style>
-body{
-  font-family: Arial;
-  background:#0f172a;
-  color:#fff;
-  padding:20px;
-}
-form{
-  max-width:420px;
-  margin:auto;
-  background:#020617;
-  padding:20px;
-  border-radius:10px;
-}
-input,select,textarea,button{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  border-radius:6px;
-  border:none;
-}
-button{
-  background:#22c55e;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-</style>
+    <!-- Waves Effect Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="https://trollifyindustry.github.io/premjanghela/css/themes/all-themes.css" rel="stylesheet" />
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
 
-<form id="feeForm">
-  <h2>Fee Transaction</h2>
+<section class="content">
+    <div class="container-fluid">
 
-  <input type="date" id="date" required>
-  
-  <input type="text" id="scholar" placeholder="Enter Scholar No..." readonly="readonly"  required>
-  <input type="text" id="session" placeholder="Session"  readonly="readonly" >
-  <input type="text" id="className" placeholder="Session"  readonly="readonly" > 
+        <!-- Vertical Layout -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Fee Transactions Form
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="javascript:void(0);">Action</a></li>
+                                    <li><a href="javascript:void(0);">Another action</a></li>
+                                    <li><a href="javascript:void(0);">Something else here</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <form id="feeForm">
+                            
+                            
+                            
+                            
+                            
+                    
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="date" id="date" class="form-control" required="required">
+                                </div>
+                            </div>
+                            
+                            
+                
+                            <div class="form-group">
+                                <div class="form-line">
+                                  <input type="text" id="scholar" class="form-control" placeholder="Enter Scholar No..." readonly="readonly" required>
+                                </div>
+                            </div>
 
-  <input type="number" id="amount" placeholder="Amount" required>
+                        <div class="form-group">
+                            <div class="form-line">
+                               <input type="text" id="session" class="form-control" placeholder="Session"  readonly="readonly" >
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <div class="form-line">
+                               <input type="text" id="className" class="form-control" placeholder="Class"  readonly="readonly" > 
+                           </div>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                            <div class="form-line">
+                             <input type="number" id="amount" class="form-control" placeholder="Amount" required>
+                           </div>
+                        </div>
+                        
+                        
+                        <div class="form-group">
+                              <div class="form-line">
+                               <select id="paymentMode" required>
+                                  <option value="">Payment Mode</option>
+                                  <option>Cash</option>
+                                  <option>PhonePe</option>
+                                  <option>Google Pay</option>
+                                  <option>Bank Transfer</option>
+                                  <option>Paytm</option>
+                                 <option>Other</option>
+                               </select>
+                             </div>
+                        </div>
+                        
+                        <div class="form-group">
+                          <div class="form-line">
+                              <input type="text" id="payerName" class="form-control" placeholder="Payer Name" required>
+                           </div>
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                           <div class="form-line">
+                           <select id="receiver" required>
+                              <option value="">Receiver</option>
+                              <option>Vandana Sulakhiya</option>
+                              <option>Varsha Sulakhiya</option>
+                      
+                           </select>
+                          </div>
+                        </div>
+                        
+                        <div class="form-group">
+                           <div class="form-line">
+                             <textarea id="remark" class="form-control" placeholder="Remark"></textarea>
+                           </div>
+                        </div>
+                        
 
-  <select id="paymentMode" required>
-    <option value="">Payment Mode</option>
-    <option>Cash</option>
-    <option>Online</option>
-  </select>
+                            <button type="submit" class="btn btn-primary m-t-15 waves-effect">Save Transaction</button>
+                        
+                        
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Vertical Layout -->
+     </div>
+</section>   
 
-  <input type="text" id="payerName" placeholder="Payer Name" required>
-
-  <select id="receiver" required>
-    <option value="">Receiver</option>
-    <option>Varsha Sulakhiya</option>
-    <option>Vandana Sulakhiya</option>
-  </select>
-
-  <textarea id="remark" placeholder="Remark"></textarea>
-
-  <button type="submit">Save Transaction</button>
-</form>
 
 <script>
 document.getElementById("date").valueAsDate = new Date();
 
-const scriptURL = "https://script.google.com/macros/s/AKfycbz6nK3tXrZcf3mrvDSkqXSAaVh886wHcf5vh8s5xj2NsK2d5uRU5U7C0NY0xO84yfOByA/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbwEilYMeJIjxQXccfZ-R4BZIz5T-KWKVtJ-jIMwSQ7jAMsFLz5cza9J57Zv6Y0zkjT7BQ/exec";
 
 document.getElementById("feeForm").addEventListener("submit", function(e){
   e.preventDefault();
@@ -147,15 +229,37 @@ if(qsClass){
   document.getElementById("className").value = qsClass;
 }
 </script>
+<!-- Jquery Core Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/js/bootstrap.js"></script>
+
+<!-- Select Plugin Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+<!-- Slimscroll Plugin Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+<!-- Waves Effect Plugin Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.js"></script>
+
+<!-- Custom Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/js/admin.js"></script>
+<script src="https://trollifyindustry.github.io/premjanghela/js/pages/examples/profile.js"></script>
+
+<!-- Demo Js -->
+<script src="https://trollifyindustry.github.io/premjanghela/js/demo.js"></script>
 
 </body>
 </html>
+
 
 <!-----------------------------
 function doPost(e) {
   try {
     const sheet = SpreadsheetApp
-      .openById("15C6PwONDpl_oKAdiYLF_hqwaSZs-0_gW-0xoN-PRJjY")
+      .openById("1CBe8pojfjuldTmFd3DnR7kG2MzoAbNri1hZpUzuIXFU")
       .getSheetByName("FeeTransactions");
 
     const data = JSON.parse(e.postData.contents);
@@ -189,5 +293,8 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+------->
+
 
 
