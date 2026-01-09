@@ -3,44 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <title>All Fee Transactions</title>
+<link rel="icon" href="../../favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+  <!-- Bootstrap Core Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+  <!-- Waves Effect Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.css" rel="stylesheet" />
+
+  <!-- Animation Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/plugins/animate-css/animate.css" rel="stylesheet" />
+
+  <!-- Custom Css -->
+  <link href="https://trollifyindustry.github.io/premjanghela/css/style.css" rel="stylesheet">
+
+  <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+  <link href="https://trollifyindustry.github.io/premjanghela/css/themes/all-themes.css" rel="stylesheet" />
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
-body{font-family:Arial;background:#f4f6f9;padding:15px}
-h2{text-align:center}
-
-.top-bar{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-  flex-wrap:wrap
-}
-
-input,button{
-  padding:7px;font-size:14px
-}
-button{
-  background:#2563eb;
-  color:#fff;
-  border:none;
-  cursor:pointer
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:#fff
-}
-th,td{
-  border:1px solid #ccc;
-  padding:7px;
-  text-align:center
-}
-th{
-  background:#333;
-  color:#fff
-}
 .pending{color:red;font-weight:bold}
 .paid{color:green;font-weight:bold}
 
@@ -52,37 +38,65 @@ th{
 
 <body>
 
-<h2>All Fee Transactions</h2>
 
-<div class="top-bar">
-  <input type="text" id="searchBox"
-   placeholder="Search Name / Scholar / Father / Amount / Mode / Receiver">
-  <button onclick="window.print()">Print</button>
-</div>
 
-<table>
-<thead>
-<tr>
-<th>Scholar</th>
-<th>Name</th>
-<th>Father</th>
-<th>Date</th>
-<th>Session</th>
-<th>Class</th>
-<th>Total Fee</th>
-<th>Paid</th>
-<th>Pending</th>
-<th>Mode</th>
-<th>Received By</th>
-<th>Remark</th>
-</tr>
-</thead>
-<tbody id="txnTable"></tbody>
-</table>
+<section class="content">
+    <div class="container-fluid">
+     
+        <!-- Basic Table -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                           All Fee Transactions
+                            <small>  <input type="text" id="searchBox" placeholder="Search Name / Scholar / Father / Amount / Mode / Receiver"></small>
+                        </h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a onclick="window.print()">Print</a></li>
+                                    <li><a href="javascript:void(0);">Another action</a></li>
+                                    <li><a href="javascript:void(0);">Something else here</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Scholar</th>
+                                    <th>Name</th>
+                                    <th>Father</th>
+                                    <th>Date</th>
+                                    <th>Session</th>
+                                    <th>Class</th>
+                                    <th>Total Fee</th>
+                                    <th>Paid</th>
+                                    <th>Pending</th>
+                                    <th>Mode</th>
+                                    <th>Received By</th>
+                                    <th>Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txnTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Basic Table -->
+    </div>
+</section>
+
+
 
 <script>
-const API_URL =
-"https://script.google.com/macros/s/AKfycby2HJCWdtpjkMCmWm8T74wFqdgDowOTcTFIthN2ToIdZIQ2Nl9oab_si67NqbCz-MWfFg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwmdgUFKSJ5WhwVLsEcYq2rp2vUwOKd0YTHA2KqrFVvp_y37bm4f_ObafohxNECsyi2lQ/exec";
 
 let allData=[];
 
@@ -144,6 +158,27 @@ function formatDate(d){
           ${dt.getFullYear()}`;
 }
 </script>
+<!-- Jquery Core Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery/jquery.min.js"></script>
+
+   <!-- Bootstrap Core Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap/js/bootstrap.js"></script>
+
+   <!-- Select Plugin Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+   <!-- Slimscroll Plugin Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+   <!-- Waves Effect Plugin Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/plugins/node-waves/waves.js"></script>
+
+   <!-- Custom Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/js/admin.js"></script>
+   <script src="https://trollifyindustry.github.io/premjanghela/js/pages/examples/profile.js"></script>
+
+   <!-- Demo Js -->
+   <script src="https://trollifyindustry.github.io/premjanghela/js/demo.js"></script>
 
 </body>
 </html>
@@ -212,3 +247,4 @@ function doGet() {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
+----->
