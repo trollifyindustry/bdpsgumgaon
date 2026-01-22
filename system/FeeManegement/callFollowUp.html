@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Fee Follow-up Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:15px}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{border:1px solid #ccc;padding:6px;text-align:center;font-size:13px}
+th{background:#333;color:#fff}
+input,select,button{padding:5px;font-size:12px}
+button{background:#2563eb;color:#fff;border:none;cursor:pointer}
+.pending{color:red;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<h2>Student Fee Follow-up</h2>
+
+<input id="search" placeholder="Search Name / Scholar / Phone">
+
+<table>
+<thead>
+<tr>
+<th>Scholar</th>
+<th>Name</th>
+<th>Father</th>
+<th>Class</th>
+<th>Status</th>
+<th>Phone</th>
+<th>Last Call</th>
+<th>Call By</th>
+<th>Pay After</th>
+<th>Reason</th>
+<th>Remark</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="tbl"></tbody>
+</table>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbz8MAekdHoKhSVCQsFYDYzWBVQ8ELbUF1PxRER6mMBjUUscMdJuAu35pnEz3uISA9ZhGw/exec";
+let all=[];
+
+// 🔄 LOADING
+Swal.fire({title:"Loading...",allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+
+fetch(API_URL)
+.then(r=>r.json())
+.then(d=>{
+  Swal.close();
+  all=d;
+  render(d);
+});
+
+function render(data){
+  let h="";
+  data.forEach(s=>{
+    h+=`
+<tr>
+<td>${s.scholar}</td>
+<td>${s.name}</td>
+<td>${s.father}</td>
+<td>${s.class}</td>
+<td class="pending">${s.pending}</td>
+<td><a href="tel:${s.phone}">${s.phone}</a></td>
+
+<td><input type="date" id="d${s.scholar}" value="${s.callDate}"></td>
+
+<td>
+<select id="c${s.scholar}">
+<option value="">Select</option>
+<option ${s.callBy=="Prem Janghela"?"selected":""}>Prem Janghela</option>
+<option ${s.callBy=="Chanchlesh Sahu"?"selected":""}>Chanchlesh Sahu</option>
+<option ${s.callBy=="Pankaj Mangrole"?"selected":""}>Pankaj Mangrole</option>
+<option ${s.callBy=="Varsha Sulakhiya"?"selected":""}>Varsha Sulakhiya</option>
+<option ${s.callBy=="Sakshi Raghuwanshi"?"selected":""}>Sakshi Raghuwanshi</option>
+<option ${s.callBy=="Other"?"selected":""}>Other</option>
+</select>
+</td>
+
+<td>
+<select id="p${s.scholar}">
+<option>${s.payAfter}</option>
+<option>1 Day</option>
+<option>7 Days</option>
+<option>15 Days</option>
+<option>1 Month</option>
+</select>
+</td>
+
+<td><input id="r${s.scholar}" value="${s.reason}"></td>
+<td><input id="rm${s.scholar}" value="${s.remark}"></td>
+
+<td><button onclick="save('${s.scholar}')">Save</button></td>
+</tr>`;
+  });
+  tbl.innerHTML=h;
+}
+
+// 💾 SAVE
+function save(sch){
+  Swal.fire({
+    title:"Are you sure?",
+    showCancelButton:true
+  }).then(res=>{
+    if(!res.isConfirmed) return;
+
+    Swal.fire({title:"Saving...",allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+
+    fetch(API_URL,{
+      method:"POST",
+      body:JSON.stringify({
+        scholar:sch,
+        callDate:document.getElementById("d"+sch).value,
+        callBy:document.getElementById("c"+sch).value,
+        payAfter:document.getElementById("p"+sch).value,
+        reason:document.getElementById("r"+sch).value,
+        remark:document.getElementById("rm"+sch).value
+      })
+    })
+    .then(()=>Swal.fire("Saved","Data Updated Successfully","success"));
+  });
+}
+
+// 🔍 SEARCH
+search.addEventListener("input",()=>{
+  let q=search.value.toLowerCase();
+  render(all.filter(s=>
+    (s.name+s.scholar+s.phone).toLowerCase().includes(q)
+  ));
+});
+</script>
+
+</body>
+</html>
+<!---
+function doGet(e){
+  const ss = SpreadsheetApp.getActive();
+
+  const students = ss.getSheetByName("Students").getDataRange().getValues();
+  const sessions = ss.getSheetByName("StudentSessions").getDataRange().getValues();
+  const txns = ss.getSheetByName("FeeTransactions").getDataRange().getValues();
+  const follow = ss.getSheetByName("FeeFollowUp").getDataRange().getValues();
+
+  // ===== STUDENT MAP =====
+  let studentMap = {};
+  for(let i=1;i<students.length;i++){
+    let [sch,name,father,mother,phone] = students[i];
+    studentMap[sch] = {name,father,mother,phone};
+  }
+
+  // ===== PAID MAP (SESSION WISE) =====
+  let paidMap = {};
+  for(let i=1;i<txns.length;i++){
+    let [,sch,session,,amt] = txns[i];
+    let key = sch+"_"+session;
+    paidMap[key] = (paidMap[key]||0) + Number(amt);
+  }
+
+  // ===== FOLLOW UP MAP =====
+  let followMap = {};
+  for(let i=1;i<follow.length;i++){
+    let [sch,callDate,callBy,payAfter,reason,remark] = follow[i];
+    followMap[sch] = {callDate,callBy,payAfter,reason,remark};
+  }
+
+  // ===== RESULT =====
+  let result = [];
+  for(let i=1;i<sessions.length;i++){
+    let [sch,session,cls,total] = sessions[i];
+    let paid = paidMap[sch+"_"+session] || 0;
+    let s = studentMap[sch] || {};
+    let f = followMap[sch] || {};
+
+    result.push({
+      scholar: sch,
+      class: cls,
+      session: session,
+      total: Number(total),
+      paid: paid,
+      pending: paid>0 ? "Paid" : "Unpaid",
+
+      name: s.name||"",
+      father: s.father||"",
+      mother: s.mother||"",
+      phone: s.phone||"",
+
+      callDate: formatDate(f.callDate),
+      callBy: f.callBy||"",
+      payAfter: f.payAfter||"",
+      reason: f.reason||"",
+      remark: f.remark||""
+    });
+  }
+
+  return ContentService.createTextOutput(JSON.stringify(result))
+  .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+// ===== SAVE FOLLOW UP =====
+function doPost(e){
+  const data = JSON.parse(e.postData.contents);
+  const sh = SpreadsheetApp.getActive().getSheetByName("FeeFollowUp");
+  const rows = sh.getDataRange().getValues();
+
+  for(let i=1;i<rows.length;i++){
+    if(rows[i][0] == data.scholar){
+      sh.getRange(i+1,2,1,6).setValues([[
+        data.callDate,
+        data.callBy,
+        data.payAfter,
+        data.reason,
+        data.remark,
+        new Date()
+      ]]);
+      return ok();
+    }
+  }
+
+  sh.appendRow([
+    data.scholar,
+    data.callDate,
+    data.callBy,
+    data.payAfter,
+    data.reason,
+    data.remark,
+    new Date()
+  ]);
+
+  return ok();
+}
+
+function formatDate(d){
+  if(!d) return "";
+  if(Object.prototype.toString.call(d)==="[object Date]"){
+    return Utilities.formatDate(d, Session.getScriptTimeZone(),"yyyy-MM-dd");
+  }
+  return d;
+}
+
+function ok(){
+  return ContentService.createTextOutput(JSON.stringify({status:"success"}))
+  .setMimeType(ContentService.MimeType.JSON);
+}
+--->
