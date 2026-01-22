@@ -7,6 +7,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
+/* ❌ CSS SAME – NO CHANGE */
 body{
   font-family: Arial, sans-serif;
   background:#111;
@@ -38,10 +39,7 @@ th,td{
 }
 th{background:#222}
 tr:hover{background:#1f1f1f}
-.phone{
-  color:#00e5ff;
-  cursor:pointer;
-}
+.phone{color:#00e5ff;cursor:pointer}
 .paid{color:#00e676;font-weight:bold}
 .unpaid{color:#ff5252;font-weight:bold}
 </style>
@@ -51,27 +49,35 @@ tr:hover{background:#1f1f1f}
 
 <h2>📞 Fee Follow-Up Dashboard</h2>
 
+<!-- 🔍 FILTERS -->
 <input id="search" placeholder="Search Name / Scholar / Phone">
-<input type="date" id="dateFilter">
 
-<select id="payAfterFilter">
-  <option value="">All Pay After</option>
-  <option>1 Day</option>
-  <option>7 Days</option>
-  <option>15 Days</option>
-  <option>1 Month</option>
+<input type="date" id="lastCallFilter" title="Last Call Date">
+<input type="date" id="nextCallFilter" title="Next Call Date">
+
+<select id="statusFilter">
+  <option value="">All Status</option>
+  <option value="Paid">Paid</option>
+  <option value="Unpaid">Unpaid</option>
 </select>
+
+<select id="classFilter">
+  <option value="">All Classes</option>
+</select>
+
+<button onclick="todayTask()">📞 Today's Calling Task</button>
 
 <table>
 <thead>
 <tr>
+<th>Sr</th>
 <th>Scholar</th>
 <th>Name</th>
 <th>Class</th>
 <th>Phone</th>
 <th>Status</th>
 <th>Last Call</th>
-<th>Pay After</th>
+<th>Next Call</th>
 <th>Reason</th>
 <th>Remark</th>
 <th>Save</th>
@@ -81,109 +87,105 @@ tr:hover{background:#1f1f1f}
 </table>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwYx_C7o9u0LHoAZCRCoc3JnJSwT3Nuy_GAPTWn2D84D7xfJNmnJcBHWqmN_SVvaQZMLQ/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbzi5yml3XRtxFIjFVs7u81GA8pabnPrUmrODA30MyPwHj7keBgwhhb6eQ4JMFnkkD3KEQ/exec";
 
-let allData = [];
+let allData=[];
 
-Swal.fire({
-  title: "Loading...",
-  allowOutsideClick: false,
-  didOpen: () => Swal.showLoading()
-});
+Swal.fire({title:"Loading...",allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
 
 fetch(API_URL)
 .then(r=>r.json())
 .then(d=>{
-  allData = d;
+  allData=d;
+  fillClassFilter(d);
   render(d);
   Swal.close();
 });
 
 function render(data){
   tbody.innerHTML="";
-  data.forEach(s=>{
-    let tr = document.createElement("tr");
-    tr.innerHTML=`
-      <td>${s.scholar}</td>
-      <td>${s.name}</td>
-      <td>${s.class}</td>
-      <td class="phone" onclick="call('${s.phone}')">${s.phone}</td>
-      <td class="${s.pending=='Paid'?'paid':'unpaid'}">${s.pending}</td>
-      <td><input type="date" value="${s.callDate||''}" id="d${s.scholar}"></td>
-      <td>
-        <select id="p${s.scholar}">
-          <option>${s.payAfter||''}</option>
-          <option>1 Day</option>
-          <option>7 Days</option>
-          <option>15 Days</option>
-          <option>1 Month</option>
-        </select>
-      </td>
-      <td><input id="r${s.scholar}" value="${s.reason||''}"></td>
-      <td><input id="m${s.scholar}" value="${s.remark||''}"></td>
-      <td><button onclick="save('${s.scholar}')">Save</button></td>
-    `;
-    tbody.appendChild(tr);
+  data.forEach((s,i)=>{
+    tbody.innerHTML+=`
+<tr>
+<td>${i+1}</td>
+<td>${s.scholar}</td>
+<td>${s.name}</td>
+<td>${s.class}</td>
+<td class="phone" onclick="call('${s.phone}')">${s.phone}</td>
+<td class="${s.pending=='Paid'?'paid':'unpaid'}">${s.pending}</td>
+<td><input type="date" id="d${s.scholar}" value="${s.callDate||''}"></td>
+<td><input type="date" id="n${s.scholar}" value="${s.nextCallDate||''}"></td>
+<td><input id="r${s.scholar}" value="${s.reason||''}"></td>
+<td><input id="m${s.scholar}" value="${s.remark||''}"></td>
+<td><button onclick="save('${s.scholar}')">Save</button></td>
+</tr>`;
   });
 }
 
-function call(num){
-  location.href = "tel:"+num;
+function call(n){ location.href="tel:"+n; }
+
+/* 🎯 TODAY TASK BUTTON */
+function todayTask(){
+  let today=new Date().toISOString().slice(0,10);
+  nextCallFilter.value=today;
+  applyFilters();
 }
 
+/* 🔍 FILTER LOGIC */
+function applyFilters(){
+  let q=search.value.toLowerCase();
+  let lc=lastCallFilter.value;
+  let nc=nextCallFilter.value;
+  let st=statusFilter.value;
+  let cl=classFilter.value;
+
+  render(allData.filter(s=>
+    (!q||(s.name+s.scholar+s.phone).toLowerCase().includes(q)) &&
+    (!lc||s.callDate===lc) &&
+    (!nc||s.nextCallDate===nc) &&
+    (!st||s.pending===st) &&
+    (!cl||s.class===cl)
+  ));
+}
+
+document.querySelectorAll(
+  "#search,#lastCallFilter,#nextCallFilter,#statusFilter,#classFilter"
+).forEach(e=>e.addEventListener("input",applyFilters));
+
+/* 🏫 CLASS FILTER AUTO FILL */
+function fillClassFilter(data){
+  let cls=[...new Set(data.map(d=>d.class))];
+  cls.forEach(c=>{
+    classFilter.innerHTML+=`<option>${c}</option>`;
+  });
+}
+
+/* 💾 SAVE */
 function save(sch){
-  Swal.fire({
-    title:"Are you sure?",
-    icon:"question",
-    showCancelButton:true
-  }).then(res=>{
+  Swal.fire({title:"Are you sure?",showCancelButton:true})
+  .then(res=>{
     if(!res.isConfirmed) return;
 
-    Swal.fire({
-      title:"Saving...",
-      allowOutsideClick:false,
-      didOpen:()=>Swal.showLoading()
-    });
+    Swal.fire({title:"Saving...",allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
 
     fetch(API_URL,{
       method:"POST",
       body:JSON.stringify({
         scholar:sch,
         callDate:document.getElementById("d"+sch).value,
+        nextCallDate:document.getElementById("n"+sch).value,
         callBy:"Admin",
-        payAfter:document.getElementById("p"+sch).value,
         reason:document.getElementById("r"+sch).value,
         remark:document.getElementById("m"+sch).value
       })
-    }).then(r=>r.json())
-     .then(()=>{
-       Swal.fire("Saved","Follow-up updated","success");
-     });
+    }).then(()=>Swal.fire("Saved","Updated","success"));
   });
 }
-
-document.querySelectorAll("#search,#dateFilter,#payAfterFilter")
-.forEach(el=>{
-  el.addEventListener("input",()=>{
-    let q=search.value.toLowerCase();
-    let d=dateFilter.value;
-    let p=payAfterFilter.value;
-
-    render(allData.filter(s=>
-      (!q||(s.name+s.scholar+s.phone).toLowerCase().includes(q)) &&
-      (!d||s.callDate===d) &&
-      (!p||s.payAfter===p)
-    ));
-  });
-});
 </script>
 
 </body>
 </html>
-
-
-<!---
-
+<!-----
 function doGet() {
   const ss = SpreadsheetApp.getActive();
 
@@ -192,14 +194,14 @@ function doGet() {
   const txns = ss.getSheetByName("FeeTransactions").getDataRange().getValues();
   const follow = ss.getSheetByName("FeeFollowUp").getDataRange().getValues();
 
-  // ========= STUDENT MAP =========
+  // ================= STUDENT MAP =================
   let studentMap = {};
   for (let i = 1; i < students.length; i++) {
     let [sch, name, father, mother, phone] = students[i];
     studentMap[sch] = { name, father, mother, phone };
   }
 
-  // ========= PAID MAP =========
+  // ================= PAID MAP (SESSION WISE) =================
   let paidMap = {};
   for (let i = 1; i < txns.length; i++) {
     let [, sch, session, , amt] = txns[i];
@@ -207,28 +209,34 @@ function doGet() {
     paidMap[key] = (paidMap[key] || 0) + Number(amt);
   }
 
-  // ========= FOLLOW UP MAP =========
+  // ================= FOLLOW UP MAP =================
   let followMap = {};
   for (let i = 1; i < follow.length; i++) {
-    let [sch, callDate, callBy, payAfter, reason, remark] = follow[i];
-    followMap[sch] = { callDate, callBy, payAfter, reason, remark };
+    let [sch, callDate, callBy, nextCallDate, reason, remark] = follow[i];
+    followMap[sch] = {
+      callDate,
+      callBy,
+      nextCallDate,
+      reason,
+      remark
+    };
   }
 
-  // ========= FIND LATEST SESSION =========
+  // ================= FIND LATEST SESSION =================
   let latestSession = sessions
     .slice(1)
     .map(r => r[1])
     .sort()
-    .pop(); // example 2025-26
+    .pop(); // eg: 2025-26
 
-  // ========= UNIQUE STUDENTS (LATEST ONLY) =========
+  // ================= UNIQUE STUDENTS (LATEST ONLY) =================
   let resultMap = {};
 
   for (let i = 1; i < sessions.length; i++) {
     let [sch, session, cls, total] = sessions[i];
 
-    if (session !== latestSession) continue; // ❗ ignore old session
-    if (resultMap[sch]) continue; // ❗ avoid duplicate scholar
+    if (session !== latestSession) continue;     // ❌ old session ignore
+    if (resultMap[sch]) continue;                // ❌ duplicate scholar ignore
 
     let paid = paidMap[sch + "_" + session] || 0;
     let s = studentMap[sch] || {};
@@ -237,14 +245,16 @@ function doGet() {
     resultMap[sch] = {
       scholar: sch,
       class: cls,
-      session,
+      session: session,
       pending: paid > 0 ? "Paid" : "Unpaid",
+
       name: s.name || "",
       father: s.father || "",
       phone: s.phone || "",
+
       callDate: formatDate(f.callDate),
+      nextCallDate: formatDate(f.nextCallDate), // ✅ FIXED
       callBy: f.callBy || "",
-      payAfter: f.payAfter || "",
       reason: f.reason || "",
       remark: f.remark || ""
     };
@@ -255,7 +265,7 @@ function doGet() {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ========= SAVE =========
+// ================= SAVE FOLLOW UP =================
 function doPost(e) {
   const data = JSON.parse(e.postData.contents);
   const sh = SpreadsheetApp.getActive().getSheetByName("FeeFollowUp");
@@ -264,11 +274,11 @@ function doPost(e) {
   for (let i = 1; i < rows.length; i++) {
     if (rows[i][0] == data.scholar) {
       sh.getRange(i + 1, 2, 1, 6).setValues([[
-        data.callDate,
-        data.callBy,
-        data.payAfter,
-        data.reason,
-        data.remark,
+        data.callDate || "",
+        data.callBy || "",
+        data.nextCallDate || "",
+        data.reason || "",
+        data.remark || "",
         new Date()
       ]]);
       return ok();
@@ -277,27 +287,34 @@ function doPost(e) {
 
   sh.appendRow([
     data.scholar,
-    data.callDate,
-    data.callBy,
-    data.payAfter,
-    data.reason,
-    data.remark,
+    data.callDate || "",
+    data.callBy || "",
+    data.nextCallDate || "",
+    data.reason || "",
+    data.remark || "",
     new Date()
   ]);
 
   return ok();
 }
 
+// ================= DATE FORMAT =================
 function formatDate(d) {
   if (!d) return "";
   if (Object.prototype.toString.call(d) === "[object Date]") {
-    return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd");
+    return Utilities.formatDate(
+      d,
+      Session.getScriptTimeZone(),
+      "yyyy-MM-dd"
+    );
   }
   return d;
 }
 
+// ================= RESPONSE =================
 function ok() {
-  return ContentService.createTextOutput(JSON.stringify({ status: "success" }))
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: "success" }))
     .setMimeType(ContentService.MimeType.JSON);
 }
---->
+ ---->
