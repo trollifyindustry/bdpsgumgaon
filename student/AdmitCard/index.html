@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admit Card Maker</title>
-    <style>
+   
+</head>
+  <style> 
         body {
             font-family: Arial, sans-serif;
         }
@@ -20,6 +22,12 @@
             text-align: left;
         }
 
+.infotable{
+  font-size:11.5px ;
+  border-color: #fff;
+  padding: 1px;
+}
+        
        .logo {
        width: 90%;               /* Set width to 90% */
        display: block;            /* Ensure the image is treated as a block-level element */
@@ -53,6 +61,13 @@
        margin-left:25px;
        position:;
        }
+.bg-logo{
+     width:22%;
+     position:absolute;
+     opacity:10%;
+     margin-top:130px;
+     margin-left:140px;
+}
        .prem-name {
        width:9%;
        opacity: 100%;            /* Set opacity to 70% */
@@ -204,8 +219,8 @@
         
         
         
-    </style>
-</head>
+    
+</style>
 <body>
 
 <h1>Admit Card Maker</h1>
@@ -216,11 +231,11 @@
 <table id="studentTable">
     <thead>
         <tr>
-            <th>Student Name</th>
-            <th>Father Name</th>
+            <th>Name</th>
+            <th>Father</th>
             <th>Class</th>
             <th>Roll No</th>
-            <th>Date of Birth</th>
+            <th>DOB</th>
         </tr>
     </thead>
    <tbody id="studenttable">
@@ -231,11 +246,8 @@
 <!-- Form to Input Exam Details -->
 <div class="form-section">
     <label for="examType">Exam Type: </label>
-    <select id="examType">
-        <option value="HALF YEARLY EXAMINATION 2025-26">HALF YEARLY EXAMINATION 2025-26</option>
-        <option value="QUARTERLY EXAMINATION 2025-26">QUARTERLY EXAMINATION 2025-26</option>
-        <option value="ANNUAL EXAMINATION 2025-26"> ANNUAL EXAMINATION 2025-26</option>
-    </select>
+    <input type="text"  id="examType" value="HALF YEARLY EXAMINATION 2025-26">
+    
     <br><br>
     <label for="subject1">Subject 1: </label> <input type="text" id="subject1" value="MATHS">
     <label for="date1">Date: </label> <input type="txt" id="date1">
@@ -296,14 +308,34 @@
 
             // Create admit card HTML structure
             const admitCard = `
-                <div class="admit-card">
+                <div class="admit-card"> 
                     <img class="logo" src="https://i.ibb.co/yFb2Nf43/20240824-224545.jpg">
                     <div class="admit-card-header">${examType} <br>Admit Card</div>
                     <div class="admit-card-info">
-                        <p><strong>STUDENT NAME :</strong> ${studentName}
-                        <strong class="text4">CLASS :</strong> ${studentClass}</p>
-                        <p><strong>ROLL NO</strong> ${rollNo}
-                        <strong class="text4">DATE OF BIRTH :</strong> ${dob}</p>
+                    
+                    <table>
+                          <tr>
+                              <th Class="infotable">Name - </th>
+                              <td Class="infotable" colspan="1">${studentName}</td>
+                              <th Class="infotable">Father - </th>
+                              <td Class="infotable" colspan="1">${fatherName}</td>
+                              <td Class="infotable" colspan="1"></td>
+                              <td Class="infotable" colspan="1"></td>
+                              
+                              
+                          </tr>
+                          <tr>
+                              <th Class="infotable">DOB - </th>
+                              <td Class="infotable">${dob}</td>
+                              <th Class="infotable">Class - </th>
+                              <td Class="infotable">${studentClass}</td>
+                              <th Class="infotable">Roll No - </th>
+                              <td Class="infotable">${rollNo}</td>
+                          </tr>
+                          
+                    </table>
+                    
+                       
                     </div>
                     <p class="text3"> Subject-wise Exam Time table</p>
                     <table class="admit-card-table">
@@ -328,6 +360,8 @@
                     <p class="text1">1. प्रवेश पत्र के बिना परीक्षा में बैठने की अनुमति नहीं होगी।</p>
                     <p class="text2">Principal Signature </p>
                     <img src="https://i.postimg.cc/FzqPcxBX/20241008-083425.png" class="prem-name">
+                    <img src="https://i.ibb.co/0pVgJhMf/20240823-085151-1-jpg-1.jpg" class="bg-logo">
+                    
                 </div>
             `;
 
